@@ -5,22 +5,23 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 interface AudioContextType {
   title: string;
   artist: string;
-  setTitle: (title: string) => void;
-  setArtist: (artist: string) => void;
+  genre: string;
+  volume: number;
   playing: boolean;
+  muted: boolean;
   play: () => void;
   pause: () => void;
-  volume: number;
+  setTitle: (title: string) => void;
+  setArtist: (artist: string) => void;
   setVolume: (volume: number) => void;
-  muted: boolean;
   toggleMute: (muted?: boolean) => void;
   cycleGenre: () => void;
 }
 
 const genres = [
-  { id: "rock", name: "Rock", path: "rock" },
-  { id: "rock", name: "Rock", path: "rock" },
-  { id: "rock", name: "Rock", path: "rock" },
+  { name: "Principal", path: "main" },
+  { name: "Rock", path: "rock" },
+  { name: "Dance", path: "dance" },
 ];
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -35,9 +36,9 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
 
-  const updateSource = (mountId: string) => {
+  const updateSource = (genre: string) => {
     if (!audioRef.current) return;
-    const mp = genres.find((m) => m.id === mountId)?.path || mountId;
+    const mp = genres.find((m) => m.name === genre)?.path || genre;
     audioRef.current.src = `${baseUrl}/${mp}?t=${Date.now() / 1000}`;
   };
 
@@ -69,7 +70,16 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const cycleGenre = () => {
     const idx = genres.findIndex((m) => m.path === genre);
     const next = genres[(idx + 1) % genres.length];
+    
     setGenre(next.path);
+    // setMuted(false);
+    updateSource(next.name);
+
+    if (audioRef.current) {
+      audioRef.current.load();
+      audioRef.current.src = `${baseUrl}/${genre}?t=${Date.now() / 1000}`;
+      audioRef.current.play();      
+    }
   };
 
   useEffect(() => {
@@ -100,6 +110,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
         artist,
         setTitle,
         setArtist,
+        genre,
         cycleGenre,
       }}
     >

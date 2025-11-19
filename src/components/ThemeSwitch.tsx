@@ -10,7 +10,6 @@ export default function Header() {
     <button
       type="button"
       aria-pressed={theme === "dark"}
-      className="cursor-pointer"
       onClick={() => toggleTheme()}
     >
       {theme === "dark" ? <Sun /> : <Moon />}
