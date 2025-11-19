@@ -20,6 +20,13 @@
       "recommended": true,
       "suspicious": {
         "noUnknownAtRules": "off"
+      },
+      "a11y": {
+        "useMediaCaption": "off",
+        "useButtonType": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
       }
     },
     "domains": {
@@ -30,7 +37,7 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": "off"
       }
     }
   }

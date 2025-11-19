@@ -3,16 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "bun src/server.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production /home/nginx/.bun/bin/bun src/server.ts",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "push": "bunx drizzle-kit push",
+    "seed": "bun src/db/seed.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.15",
+    "drizzle-orm": "^0.44.7",
+    "lucide-react": "^0.554.0",
     "next": "16.0.3",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
@@ -20,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
