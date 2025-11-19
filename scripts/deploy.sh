@@ -21,6 +21,7 @@ bun run seed
 bun run build || exit 1
 
 sudo /usr/bin/systemctl stop $SERVICE
+ln -s $PROJECT_DIR/public/music /var/music/rtm
 rm -rf "$PROJECT_DIR"
 mv "$TEMP_DIR" "$PROJECT_DIR"
 sudo /usr/bin/systemctl start $SERVICE

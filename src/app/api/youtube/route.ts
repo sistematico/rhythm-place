@@ -25,7 +25,6 @@ export async function POST(request: Request) {
       output: outputDir + "/%(title)s.%(ext)s",
       extractAudio: true,
       // outputNaPlaceholder: "%(title)s.%(ext)s",
-
       embedMetadata: true,
       audioFormat: "mp3",
       // format: "mp3",
