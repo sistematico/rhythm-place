@@ -29,12 +29,16 @@ export default function Header() {
           <Menu size={24} />
         </button>
         <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
+          <Link 
+            to="/"
+            className="flex items-center gap-2"
+          >
             <img
-              src="/tanstack-word-logo-white.svg"
-              alt="TanStack Logo"
+              src="/images/logotipo.svg"
+              alt="Rhythm Place"
               className="h-10"
             />
+            Rhythm Place
           </Link>
         </h1>
       </header>
@@ -45,7 +49,7 @@ export default function Header() {
         }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
+          <h2 className="text-xl font-bold">Navegação</h2>
           <button
             onClick={() => setIsOpen(false)}
             className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
