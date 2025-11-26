@@ -1,0 +1,19 @@
+[Unit]
+Description=Next.js Service (Rhythm Place)
+After=network.target
+
+[Service]
+Type=simple
+User=nginx
+#MemoryAccounting=true
+#MemoryHigh=512M
+#MemoryMax=1024M
+WorkingDirectory=/var/www/rhythm.place
+Environment="NODE_ENV=production"
+#ExecStart=/home/nginx/.bun/bin/bun run start
+ExecStart=/usr/local/bin/pnpm run start
+Restart=on-failure
+
+[Install]
+# start the app automatically
+WantedBy=multi-user.target

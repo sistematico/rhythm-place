@@ -8,8 +8,8 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"start": "node .output/server/index.mjs",
-		"push": "pnpm dlx drizzle-kit push",
-		"seed": "node ./src/db/seed.ts"
+		"push": "npx drizzle-kit push",
+		"seed": "pnpm dlx tsx ./src/db/seed.ts"
 	},
 	"keywords": [],
 	"author": "Lucas Salies Brum <sistematico@gmail.com>",
@@ -20,6 +20,7 @@
 		"@tailwindcss/vite": "^4.1.17",
 		"@tanstack/react-router": "^1.139.6",
 		"@tanstack/react-start": "^1.139.6",
+		"dotenv": "^17.2.3",
 		"drizzle-orm": "^0.44.7",
 		"nitro": "3.0.1-alpha.1",
 		"react": "^19.2.0",

@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { db } from "./index";
 import { songs } from "./schema";
 import { readdir } from "node:fs/promises";

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PATH=$PATH:/home/nginx/.bun/bin
+PATH=$PATH:/usr/local/bin
 
 NAME=rhythm
 FULLNAME=$NAME.place
@@ -15,10 +15,10 @@ cd "$TEMP_DIR" || exit 1
 git clean -fxd -e .env
 cp .env.production .env
 
-bun install
-#bun run push
-#bun run seed
-bun run build || exit 1
+pnpm install
+pnpm run push
+pnpm run seed
+pnpm run build || exit 1
 
 sudo /usr/bin/systemctl stop $SERVICE
 ln -s $PROJECT_DIR/public/music /var/music/rtm
