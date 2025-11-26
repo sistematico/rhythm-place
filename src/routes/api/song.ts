@@ -22,7 +22,7 @@ export const Route = createFileRoute('/api/song')({
             }
           })
 				} catch (error) {
-					console.error('Erro ao buscar usuários:', error)
+					console.error('Falha ao buscar música:', error)
 					return new Response(JSON.stringify({ message: 'Falha ao buscar música' }), {
 						status: 500,
 						headers: {
