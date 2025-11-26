@@ -10,43 +10,44 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiSongRouteImport } from './routes/api/song'
+import { Route as ApiSongChar123GenreChar125RouteImport } from './routes/api/song/{-$genre}'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSongRoute = ApiSongRouteImport.update({
-  id: '/api/song',
-  path: '/api/song',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiSongChar123GenreChar125Route =
+  ApiSongChar123GenreChar125RouteImport.update({
+    id: '/api/song/{-$genre}',
+    path: '/api/song/{-$genre}',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/song': typeof ApiSongRoute
+  '/api/song/{-$genre}': typeof ApiSongChar123GenreChar125Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/song': typeof ApiSongRoute
+  '/api/song/{-$genre}': typeof ApiSongChar123GenreChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/song': typeof ApiSongRoute
+  '/api/song/{-$genre}': typeof ApiSongChar123GenreChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/song'
+  fullPaths: '/' | '/api/song/{-$genre}'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/song'
-  id: '__root__' | '/' | '/api/song'
+  to: '/' | '/api/song/{-$genre}'
+  id: '__root__' | '/' | '/api/song/{-$genre}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiSongRoute: typeof ApiSongRoute
+  ApiSongChar123GenreChar125Route: typeof ApiSongChar123GenreChar125Route
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +59,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/song': {
-      id: '/api/song'
-      path: '/api/song'
-      fullPath: '/api/song'
-      preLoaderRoute: typeof ApiSongRouteImport
+    '/api/song/{-$genre}': {
+      id: '/api/song/{-$genre}'
+      path: '/api/song/{-$genre}'
+      fullPath: '/api/song/{-$genre}'
+      preLoaderRoute: typeof ApiSongChar123GenreChar125RouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +71,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiSongRoute: ApiSongRoute,
+  ApiSongChar123GenreChar125Route: ApiSongChar123GenreChar125Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
