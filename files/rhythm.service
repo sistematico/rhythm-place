@@ -1,17 +1,12 @@
 [Unit]
-Description=Next.js Service (Rhythm Place)
+Description=TanStack Service (Rhythm Place)
 After=network.target
 
 [Service]
 Type=simple
 User=nginx
-#MemoryAccounting=true
-#MemoryHigh=512M
-#MemoryMax=1024M
 WorkingDirectory=/var/www/rhythm.place
-Environment="NODE_ENV=production"
-#ExecStart=/home/nginx/.bun/bin/bun run start
-ExecStart=/usr/local/bin/pnpm run start
+ExecStart=/home/nginx/.local/share/pnpm/pnpm run start
 Restart=on-failure
 
 [Install]
