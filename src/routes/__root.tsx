@@ -1,68 +1,66 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import Header from '../components/Header'
+// src/routes/__root.tsx
+/// <reference types="vite/client" />
+import type { ReactNode } from 'react'
+import { Outlet, createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
+import MainLayout from '../components/MainLayout'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
 	head: () => ({
 		meta: [
 			{
-				charSet: 'utf-8',
+				charSet: 'utf-8'
 			},
 			{
 				name: 'viewport',
-				content: 'width=device-width, initial-scale=1',
+				content: 'width=device-width, initial-scale=1'
 			},
 			{
-				title: 'Rhythm Place',
-			},
-      {
-        opengraph: {
-          title: 'Rhythm Place',
-          description: 'Your ultimate destination for music lovers.',
-          image: 'https://rhythm.place/images/ogp.png',
-          type: 'website',
-        },
-      }
+				title: 'Rhythm Place'
+			}
 		],
+		opengraph: {
+			title: 'Rhythm Place',
+			description: 'Where Every Beat Finds You',
+			url: 'https://rhythm.place',
+			siteName: 'Rhythm Place',
+			images: [
+				{
+					url: 'https://rhythm.place/images/ogp.png',
+					width: 256,
+					height: 256,
+					alt: 'Rhythm Place'
+				}
+			],
+			locale: 'en_US',
+			type: 'website'
+		},
 		links: [
-			{
-				rel: 'stylesheet',
-				href: appCss,
-			},
-			{
-				rel: 'icon',
-				href: '/images/logotipo.svg',
-				type: 'image/svg+xml',
-				sizes: 'any',
-			},
-		],
+			{ rel: 'icon', href: '/images/favicon.svg', type: 'image/svg+xml', sizes: 'any' },
+			{ rel: 'stylesheet', href: appCss }
+		]
 	}),
-
-	shellComponent: RootDocument,
+	component: RootComponent
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootComponent() {
 	return (
-		<html lang="en">
+		<RootDocument>
+			<Outlet />
+		</RootDocument>
+	)
+}
+
+function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+	return (
+		<html lang="pt-BR">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				<Header />
-				{children}
-				<TanStackDevtools
-					config={{
-						position: 'bottom-right',
-					}}
-					plugins={[
-						{
-							name: 'Tanstack Router',
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-					]}
-				/>
+				<MainLayout>
+					{children}
+				</MainLayout>
 				<Scripts />
 			</body>
 		</html>
