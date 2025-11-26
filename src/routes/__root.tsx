@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { Outlet, createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
 import MainLayout from '../components/MainLayout'
 import appCss from '../styles.css?url'
+import { AudioProvider } from '../contexts/AudioContext'
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -53,14 +54,16 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 	return (
-		<html lang="pt-BR">
+		<html lang="pt-BR" suppressHydrationWarning={true}>
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				<MainLayout>
-					{children}
-				</MainLayout>
+				<AudioProvider>
+					<MainLayout>
+						{children}
+					</MainLayout>
+				</AudioProvider>
 				<Scripts />
 			</body>
 		</html>
