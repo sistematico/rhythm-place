@@ -12,3 +12,4 @@ dist-ssr
 
 drizzle/**
 !drizzle/.gitkeep
+public/music/**

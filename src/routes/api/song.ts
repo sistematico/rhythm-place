@@ -10,7 +10,8 @@ export const Route = createFileRoute('/api/song')({
 			// GET /api/users - Buscar todos os usuários
 			GET: async () => {
 				try {
-					const [song] = await db.select().from(songs).where(eq(songs.genre, 'various')).orderBy(sql`RANDOM()`).limit(1)
+					// const [song] = await db.select().from(songs).where(eq(songs.genre, 'various')).orderBy(sql`RANDOM()`).limit(1)
+					const [song] = await db.select().from(songs).orderBy(sql`RANDOM()`).limit(1)
 
 					if (!song) return new Response(JSON.stringify({ song: null, message: 'No song found', success: false }), { status: 404 })
 
