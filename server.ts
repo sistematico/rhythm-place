@@ -69,7 +69,7 @@ import path from 'node:path'
 const dev = process.env.NODE_ENV !== 'production'
 const SERVER_PORT = dev ? 3000 : 4060
 const CLIENT_DIRECTORY = './dist/client'
-const SERVER_ENTRY_POINT = './dist/server/server.js'
+const SERVER_ENTRY_POINT = '.output/server/index.mjs'
 
 // Logging utilities for professional output
 const log = {
