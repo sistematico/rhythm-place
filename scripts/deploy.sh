@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PATH=$PATH:/usr/local/bin
+PATH=$PATH:/home/nginx/.local/share/pnpm
 
 NAME=rhythm
 FULLNAME=$NAME.place
