@@ -12,8 +12,8 @@ PROJECT_DIR=/var/www/$FULLNAME
 
 cd $PROJECT_DIR
 
-git clean -fxd -e .env
-cp -f .env .env.production
+#git clean -fxd -e .env
+#cp -f .env .env.production
 
 npm install
 npm run push

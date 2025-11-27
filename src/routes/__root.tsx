@@ -17,7 +17,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Rhythm Place',
       },
     ],
     links: [
@@ -25,7 +25,19 @@ export const Route = createRootRoute({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/images/favicon.svg',
+      }
     ],
+    opengraph: {
+      title: 'Rhythm Place',
+      type: 'website',
+      url: 'https://rhythm.place',
+      image: 'https://rhythm.place/images/ogp.png',
+      description: 'A place to enjoy rhythm and music.',
+    },
   }),
 
   shellComponent: RootDocument,

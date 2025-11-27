@@ -3,13 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-		"start": "PORT=4060 node .output/server/index.mjs",
+    "start": "PORT=4060 node .output/server/index.mjs",
     "dev": "vite dev --port 4060",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "push": "npx drizzle-kit push",
+    "seed": "node ./src/db/seed.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.15",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-router": "^1.132.0",
@@ -17,6 +20,8 @@
     "@tanstack/react-router-ssr-query": "^1.131.7",
     "@tanstack/react-start": "^1.132.0",
     "@tanstack/router-plugin": "^1.132.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
     "lucide-react": "^0.544.0",
     "nitro": "latest",
     "react": "^19.2.0",
@@ -32,7 +37,9 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "drizzle-kit": "^0.18.1",
     "jsdom": "^27.0.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
     "vitest": "^3.0.5",
