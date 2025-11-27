@@ -7,7 +7,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"start": "NODE_ENV=production PORT=4060 node -r dotenv/config dist/server/server.js",
+		"start": "NODE_ENV=production PORT=4060 node -r dotenv/config dist/server/server.mjs",
 		"push": "npx drizzle-kit push",
 		"seed": "pnpm dlx tsx ./src/db/seed.ts"
 	},
