@@ -28,7 +28,7 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const baseUrl = process.env.NEXT_PUBLIC_STREAM_BASE_URL!;
+  const baseUrl = process.env.STREAM_BASE_URL!;
   const [genre, setGenre] = useState<string>(genres[0].path);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
