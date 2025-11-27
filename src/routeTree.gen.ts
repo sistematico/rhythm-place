@@ -10,7 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiSongRouteRouteImport } from './routes/api/song/route'
+import { Route as ApiSongIndexRouteImport } from './routes/api/song/index'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
@@ -25,9 +25,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSongRouteRoute = ApiSongRouteRouteImport.update({
-  id: '/api/song',
-  path: '/api/song',
+const ApiSongIndexRoute = ApiSongIndexRouteImport.update({
+  id: '/api/song/',
+  path: '/api/song/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
@@ -46,9 +46,9 @@ const DemoApiNamesRoute = DemoApiNamesRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSongGenreRoute = ApiSongGenreRouteImport.update({
-  id: '/$genre',
-  path: '/$genre',
-  getParentRoute: () => ApiSongRouteRoute,
+  id: '/api/song/$genre',
+  path: '/api/song/$genre',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartSsrIndexRoute = DemoStartSsrIndexRouteImport.update({
   id: '/demo/start/ssr/',
@@ -73,11 +73,11 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/song': typeof ApiSongRouteRouteWithChildren
   '/api/song/$genre': typeof ApiSongGenreRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/api/song': typeof ApiSongIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -85,11 +85,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/song': typeof ApiSongRouteRouteWithChildren
   '/api/song/$genre': typeof ApiSongGenreRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/api/song': typeof ApiSongIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -98,11 +98,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/song': typeof ApiSongRouteRouteWithChildren
   '/api/song/$genre': typeof ApiSongGenreRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/api/song/': typeof ApiSongIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -112,11 +112,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/api/song'
     | '/api/song/$genre'
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/api/song'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -124,11 +124,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/api/song'
     | '/api/song/$genre'
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/api/song'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -136,11 +136,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/api/song'
     | '/api/song/$genre'
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/api/song/'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -149,10 +149,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiSongRouteRoute: typeof ApiSongRouteRouteWithChildren
+  ApiSongGenreRoute: typeof ApiSongGenreRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
+  ApiSongIndexRoute: typeof ApiSongIndexRoute
   DemoStartSsrDataOnlyRoute: typeof DemoStartSsrDataOnlyRoute
   DemoStartSsrFullSsrRoute: typeof DemoStartSsrFullSsrRoute
   DemoStartSsrSpaModeRoute: typeof DemoStartSsrSpaModeRoute
@@ -168,11 +169,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/song': {
-      id: '/api/song'
+    '/api/song/': {
+      id: '/api/song/'
       path: '/api/song'
       fullPath: '/api/song'
-      preLoaderRoute: typeof ApiSongRouteRouteImport
+      preLoaderRoute: typeof ApiSongIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/server-funcs': {
@@ -198,10 +199,10 @@ declare module '@tanstack/react-router' {
     }
     '/api/song/$genre': {
       id: '/api/song/$genre'
-      path: '/$genre'
+      path: '/api/song/$genre'
       fullPath: '/api/song/$genre'
       preLoaderRoute: typeof ApiSongGenreRouteImport
-      parentRoute: typeof ApiSongRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/demo/start/ssr/': {
       id: '/demo/start/ssr/'
@@ -234,24 +235,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface ApiSongRouteRouteChildren {
-  ApiSongGenreRoute: typeof ApiSongGenreRoute
-}
-
-const ApiSongRouteRouteChildren: ApiSongRouteRouteChildren = {
-  ApiSongGenreRoute: ApiSongGenreRoute,
-}
-
-const ApiSongRouteRouteWithChildren = ApiSongRouteRoute._addFileChildren(
-  ApiSongRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiSongRouteRoute: ApiSongRouteRouteWithChildren,
+  ApiSongGenreRoute: ApiSongGenreRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
+  ApiSongIndexRoute: ApiSongIndexRoute,
   DemoStartSsrDataOnlyRoute: DemoStartSsrDataOnlyRoute,
   DemoStartSsrFullSsrRoute: DemoStartSsrFullSsrRoute,
   DemoStartSsrSpaModeRoute: DemoStartSsrSpaModeRoute,
