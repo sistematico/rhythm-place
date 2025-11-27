@@ -10,10 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiSongRouteRouteImport } from './routes/api/song/route'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
-import { Route as ApiSongChar123GenreChar125RouteImport } from './routes/api/song/{-$genre}'
+import { Route as ApiSongGenreRouteImport } from './routes/api/song/$genre'
 import { Route as DemoStartSsrIndexRouteImport } from './routes/demo/start.ssr.index'
 import { Route as DemoStartSsrSpaModeRouteImport } from './routes/demo/start.ssr.spa-mode'
 import { Route as DemoStartSsrFullSsrRouteImport } from './routes/demo/start.ssr.full-ssr'
@@ -22,6 +23,11 @@ import { Route as DemoStartSsrDataOnlyRouteImport } from './routes/demo/start.ss
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSongRouteRoute = ApiSongRouteRouteImport.update({
+  id: '/api/song',
+  path: '/api/song',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
@@ -39,12 +45,11 @@ const DemoApiNamesRoute = DemoApiNamesRouteImport.update({
   path: '/demo/api/names',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSongChar123GenreChar125Route =
-  ApiSongChar123GenreChar125RouteImport.update({
-    id: '/api/song/{-$genre}',
-    path: '/api/song/{-$genre}',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const ApiSongGenreRoute = ApiSongGenreRouteImport.update({
+  id: '/$genre',
+  path: '/$genre',
+  getParentRoute: () => ApiSongRouteRoute,
+} as any)
 const DemoStartSsrIndexRoute = DemoStartSsrIndexRouteImport.update({
   id: '/demo/start/ssr/',
   path: '/demo/start/ssr/',
@@ -68,7 +73,8 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/song/{-$genre}': typeof ApiSongChar123GenreChar125Route
+  '/api/song': typeof ApiSongRouteRouteWithChildren
+  '/api/song/$genre': typeof ApiSongGenreRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -79,7 +85,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/song/{-$genre}': typeof ApiSongChar123GenreChar125Route
+  '/api/song': typeof ApiSongRouteRouteWithChildren
+  '/api/song/$genre': typeof ApiSongGenreRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -91,7 +98,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/song/{-$genre}': typeof ApiSongChar123GenreChar125Route
+  '/api/song': typeof ApiSongRouteRouteWithChildren
+  '/api/song/$genre': typeof ApiSongGenreRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -104,7 +112,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/api/song/{-$genre}'
+    | '/api/song'
+    | '/api/song/$genre'
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -115,7 +124,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/api/song/{-$genre}'
+    | '/api/song'
+    | '/api/song/$genre'
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -126,7 +136,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/api/song/{-$genre}'
+    | '/api/song'
+    | '/api/song/$genre'
     | '/demo/api/names'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -138,7 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiSongChar123GenreChar125Route: typeof ApiSongChar123GenreChar125Route
+  ApiSongRouteRoute: typeof ApiSongRouteRouteWithChildren
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
@@ -155,6 +166,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/song': {
+      id: '/api/song'
+      path: '/api/song'
+      fullPath: '/api/song'
+      preLoaderRoute: typeof ApiSongRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/server-funcs': {
@@ -178,12 +196,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoApiNamesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/song/{-$genre}': {
-      id: '/api/song/{-$genre}'
-      path: '/api/song/{-$genre}'
-      fullPath: '/api/song/{-$genre}'
-      preLoaderRoute: typeof ApiSongChar123GenreChar125RouteImport
-      parentRoute: typeof rootRouteImport
+    '/api/song/$genre': {
+      id: '/api/song/$genre'
+      path: '/$genre'
+      fullPath: '/api/song/$genre'
+      preLoaderRoute: typeof ApiSongGenreRouteImport
+      parentRoute: typeof ApiSongRouteRoute
     }
     '/demo/start/ssr/': {
       id: '/demo/start/ssr/'
@@ -216,9 +234,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ApiSongRouteRouteChildren {
+  ApiSongGenreRoute: typeof ApiSongGenreRoute
+}
+
+const ApiSongRouteRouteChildren: ApiSongRouteRouteChildren = {
+  ApiSongGenreRoute: ApiSongGenreRoute,
+}
+
+const ApiSongRouteRouteWithChildren = ApiSongRouteRoute._addFileChildren(
+  ApiSongRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiSongChar123GenreChar125Route: ApiSongChar123GenreChar125Route,
+  ApiSongRouteRoute: ApiSongRouteRouteWithChildren,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
