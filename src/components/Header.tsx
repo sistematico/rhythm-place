@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import AudioPlayer from './AudioPlayer'
 
 import { useState } from 'react'
 import { Home, Menu, X } from 'lucide-react'
@@ -16,15 +17,18 @@ export default function Header() {
         >
           <Menu size={24} />
         </button>
-        <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
-            <img
-              src="/images/logotipo.svg"
-              alt="Rhythm Place"
-              className="h-10"
-            />
-          </Link>
-        </h1>
+        <Link to="/" className="ml-4 flex items-center">
+          <img
+            src="/images/logotipo.svg"
+            alt="Rhythm Place"
+            className="h-10"
+          />
+          <h1 className="ml-4 text-xl font-semibold">
+            Rhythm Place
+          </h1>
+        </Link>
+
+        <AudioPlayer />
       </header>
 
       <aside
