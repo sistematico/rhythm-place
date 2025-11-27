@@ -1,0 +1,9 @@
+---
+- name: Executa múltiplas roles
+  hosts: all
+  gather_facts: true
+  become: yes
+
+  roles:
+    - nginx
+    - systemd
