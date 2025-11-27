@@ -3,7 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import { db } from '../../../db';
 import { songs } from '../../../db/schema';
 
-// type Song = typeof songs.$inferSelect;
+type Song = typeof songs.$inferSelect;
 
 export const Route = createFileRoute('/api/song/{-$genre}')({
   
@@ -12,16 +12,17 @@ export const Route = createFileRoute('/api/song/{-$genre}')({
       GET: async (ctx) => {
         const { genre } = ctx.params
 
+        let song: Song | null = null;
+
         if (genre) {
-          const [song] = await db.select().from(songs).where(eq(songs.genre, genre)).orderBy(sql`RANDOM()`).limit(1)
+          [song] = await db.select().from(songs).where(eq(songs.genre, genre)).orderBy(sql`RANDOM()`).limit(1)
           if (!song) {
-            console.log('song not found')            
-            return new Response(JSON.stringify({ song: null, message: 'Música não encontrada' }))
+            [song] = await db.select().from(songs).orderBy(sql`RANDOM()`).limit(1)
           }
-          return new Response(JSON.stringify(song), { status: 200, headers: { 'Content-Type': 'application/json' } })
+        } else {
+          [song] = await db.select().from(songs).orderBy(sql`RANDOM()`).limit(1)
         }
-        
-        const [song] = await db.select().from(songs).orderBy(sql`RANDOM()`).limit(1)
+          
         if (!song) return new Response(JSON.stringify({ song: null, message: 'Música não encontrada' }), { status: 404, headers: { 'Content-Type': 'application/json' } })
         return new Response(JSON.stringify(song), { status: 200, headers: { 'Content-Type': 'application/json' } })
       }
