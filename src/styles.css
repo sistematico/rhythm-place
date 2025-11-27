@@ -1,23 +1,15 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0A0A0A;
-  --foreground: #e0e0e0;
-  --primary: #1db954;
-  --secondary: #191414;
-  --tertiary: #282828;
-}
-
-@theme {
-  --background-color: var(--background);
-  --foreground-color: var(--foreground);
-  --primary-color: var(--primary);
-  --secondary-color: var(--secondary);  
-  --tertiary-color: var(--tertiary);
-}
-
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  @apply m-0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }

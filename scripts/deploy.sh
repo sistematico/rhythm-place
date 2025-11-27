@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-PATH=$PATH:/home/nginx/.local/share/pnpm
-
 NAME=rhythm
 FULLNAME=$NAME.place
 SERVICE=$NAME.service
@@ -14,16 +12,17 @@ PROJECT_DIR=/var/www/$FULLNAME
 
 cd $PROJECT_DIR
 
-#git clean -fxd -e .env
-#cp .env.production .env
+git clean -fxd -e .env
+cp -f .env .env.production
 
-pnpm install
-pnpm run push
-pnpm run seed
-pnpm run build || exit 1
+npm install
+npm run push
+npm run seed
+npm run build || exit 1
 
 sudo /usr/bin/systemctl stop $SERVICE
-[ ! -L $PROJECT_DIR/public/music ] && ln -sf $PROJECT_DIR/public/music /var/music/rtm
+#[ ! -L $PROJECT_DIR/public/music ] && ln -sf $PROJECT_DIR/public/music /var/music/rtm
 #rm -rf "$PROJECT_DIR"
 #mv "$TEMP_DIR" "$PROJECT_DIR"
+sleep 10
 sudo /usr/bin/systemctl start $SERVICE
