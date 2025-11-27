@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "test": "vitest run",
     "push": "npx drizzle-kit push",
-    "seed": "node ./src/db/seed.ts"
+    "seed": "npx tsx ./src/db/seed.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
