@@ -6,6 +6,7 @@ import { songs } from '../../../db/schema';
 // type Song = typeof songs.$inferSelect;
 
 export const Route = createFileRoute('/api/song/{-$genre}')({
+  
   server: {
     handlers: {
       GET: async (ctx) => {
