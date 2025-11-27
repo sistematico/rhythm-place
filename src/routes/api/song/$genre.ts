@@ -9,7 +9,10 @@ export const Route = createFileRoute('/api/song/$genre')({
       GET: async (ctx) => {
         const { genre } = ctx.params
         const [song] = await db.select().from(songs).where(eq(songs.genre, genre)).orderBy(sql`RANDOM()`).limit(1)
-        if (!song) return new Response(JSON.stringify({ song: null, message: 'Música não encontrada' }), { status: 404, headers: { 'Content-Type': 'application/json' } })
+        if (!song) {
+          const [noGenreSong] = await db.select().from(songs).orderBy(sql`RANDOM()`).limit(1)
+          if (noGenreSong) return new Response(JSON.stringify({ song: noGenreSong, message: 'Música não encontrada' }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+        }
         return new Response(JSON.stringify(song), { status: 200, headers: { 'Content-Type': 'application/json' } })
       }
     }
