@@ -1,7 +1,7 @@
 "use client";
 
 import { useAudio } from "@/context/AudioContext";
-import { Play, Pause, ArrowLeftRight, VolumeOff, Volume2 } from "lucide-react";
+import { Play, Pause, ArrowLeftRight, Volume2 } from "lucide-react";
 
 export default function AudioPlayer() {
   const { play, pause, playing, volume, setVolume, muted, toggleMute, genre, cycleGenre } = useAudio();
