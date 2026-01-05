@@ -3,9 +3,9 @@ import { useState } from "react";
 import rhythm from "../assets/rhythm.svg";
 import type { ApiResponse } from "shared";
 import { useMutation } from "@tanstack/react-query";
-import { RadioPlayer } from '../components/radio/RadioPlayer';
-import { RadioControls } from '../components/radio/RadioControls';
-import { StationSelector } from '../components/radio/StationSelector';
+import { RadioPlayer } from "../components/radio/RadioPlayer";
+import { RadioControls } from "../components/radio/RadioControls";
+import { StationSelector } from "../components/radio/StationSelector";
 
 export const Route = createFileRoute("/")({
 	component: Index,
@@ -43,8 +43,8 @@ function Index() {
 			<h2 className="text-2xl font-bold">Bun + Hono + Vite + React</h2>
 			<p>A typesafe fullstack monorepo</p>
 			<RadioPlayer />
-      <RadioControls />
-      <StationSelector />
+			<RadioControls />
+			<StationSelector />
 			<div className="flex items-center gap-4">
 				<button
 					type="button"

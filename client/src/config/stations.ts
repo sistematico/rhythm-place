@@ -1,6 +1,7 @@
 import type { Station } from "../types/radio";
 
-const baseUrl = import.meta.env.VITE_STREAM_BASE_URL || "https://stream.rhythm.place";
+const baseUrl =
+	import.meta.env.VITE_STREAM_BASE_URL || "https://stream.rhythm.place";
 
 export const stations: Station[] = [
 	{
