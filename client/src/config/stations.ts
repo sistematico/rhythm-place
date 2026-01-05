@@ -1,34 +1,36 @@
-import type { Station } from '../types/radio';
+import type { Station } from "../types/radio";
+
+const baseUrl = import.meta.env.VITE_STREAM_BASE_URL || "https://stream.rhythm.place";
 
 export const stations: Station[] = [
-  {
-    id: 'rock',
-    name: 'Rock Station',
-    genre: 'Rock',
-    streamUrl: 'http://localhost:8000/rock',
-  },
-  {
-    id: 'pop',
-    name: 'Pop Hits',
-    genre: 'Pop',
-    streamUrl: 'http://localhost:8000/pop',
-  },
-  {
-    id: 'jazz',
-    name: 'Jazz Lounge',
-    genre: 'Jazz',
-    streamUrl: 'http://localhost:8000/jazz',
-  },
-  {
-    id: 'eletronica',
-    name: 'Eletrônica',
-    genre: 'Eletrônica',
-    streamUrl: 'http://localhost:8000/eletronica',
-  },
-  {
-    id: 'sertanejo',
-    name: 'Sertanejo',
-    genre: 'Sertanejo',
-    streamUrl: 'http://localhost:8000/sertanejo',
-  },
+	{
+		id: "rock",
+		name: "Rock Station",
+		genre: "Rock",
+		streamUrl: `${baseUrl}/rock`,
+	},
+	{
+		id: "pop",
+		name: "Pop Hits",
+		genre: "Pop",
+		streamUrl: `${baseUrl}/pop`,
+	},
+	{
+		id: "jazz",
+		name: "Jazz Lounge",
+		genre: "Jazz",
+		streamUrl: `${baseUrl}/jazz`,
+	},
+	{
+		id: "dance",
+		name: "Dance",
+		genre: "Dance",
+		streamUrl: `${baseUrl}/dance`,
+	},
+	{
+		id: "main",
+		name: "Principal",
+		genre: "Principal",
+		streamUrl: `${baseUrl}/main`,
+	},
 ];

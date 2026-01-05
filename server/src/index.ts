@@ -24,14 +24,14 @@ app.get("/hello", async (c) => {
 });
 
 app.use("*", serveStatic({ root: "./static" }));
- 
+
 app.get("*", async (c, next) => {
-  return serveStatic({ root: "./static", path: "index.html" })(c, next);
+	return serveStatic({ root: "./static", path: "index.html" })(c, next);
 });
- 
+
 export default {
-  port,
-  fetch: app.fetch,
+	port,
+	fetch: app.fetch,
 };
- 
+
 console.log(`🦫 bhvr server running on port ${port}`);
