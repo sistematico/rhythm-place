@@ -19,8 +19,9 @@ bun install
 sudo /usr/bin/systemctl stop $SERVICE
 
 bun run build && { 
+  cd ~
   rm -rf $PROJECT_DIR
-  cp -a $TEMP_DIR $PROJECT_DIR 
+  mv $TEMP_DIR $PROJECT_DIR 
 } || {
   echo "Build failed, deployment aborted."
   sudo /usr/bin/systemctl start $SERVICE
