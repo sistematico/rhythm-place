@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
-export default defineConfig(({ command, mode }) => ({
+export default defineConfig(({ command }) => ({
 	plugins: [
 		// Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
 		tanstackRouter({
@@ -16,7 +16,10 @@ export default defineConfig(({ command, mode }) => ({
 	server: {
 		proxy: {
 			"/api": {
-				target: command === "serve" ? "http://localhost:3000" : "https://rhythm.place/api",
+				target:
+					command === "serve"
+						? "http://localhost:3000"
+						: "https://rhythm.place/api",
 				changeOrigin: true,
 			},
 		},
