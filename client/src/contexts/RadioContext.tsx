@@ -1,35 +1,35 @@
-import { createContext, useContext, useState, useRef, ReactNode } from 'react';
-import type { Station } from '../types/radio';
+import { createContext, useContext, useState, useRef, ReactNode } from "react";
+import type { Station } from "../types/radio";
 
 interface RadioContextType {
-  currentStation: Station | null;
-  setCurrentStation: (station: Station | null) => void;
-  playerRef: { current: any };
+	currentStation: Station | null;
+	setCurrentStation: (station: Station | null) => void;
+	playerRef: { current: any };
 }
 
 const RadioContext = createContext<RadioContextType | undefined>(undefined);
 
 export function RadioProvider({ children }: { children: ReactNode }) {
-  const [currentStation, setCurrentStation] = useState<Station | null>(null);
-  const playerRef = useRef<any>(null);
+	const [currentStation, setCurrentStation] = useState<Station | null>(null);
+	const playerRef = useRef<any>(null);
 
-  return (
-    <RadioContext.Provider
-      value={{
-        currentStation,
-        setCurrentStation,
-        playerRef,
-      }}
-    >
-      {children}
-    </RadioContext.Provider>
-  );
+	return (
+		<RadioContext.Provider
+			value={{
+				currentStation,
+				setCurrentStation,
+				playerRef,
+			}}
+		>
+			{children}
+		</RadioContext.Provider>
+	);
 }
 
 export function useRadio() {
-  const context = useContext(RadioContext);
-  if (!context) {
-    throw new Error('useRadio must be used within RadioProvider');
-  }
-  return context;
+	const context = useContext(RadioContext);
+	if (!context) {
+		throw new Error("useRadio must be used within RadioProvider");
+	}
+	return context;
 }
