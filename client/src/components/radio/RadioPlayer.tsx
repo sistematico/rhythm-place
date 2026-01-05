@@ -1,49 +1,26 @@
 import { useEffect, useRef } from 'react';
-import Plyr from 'plyr';
+import * as PlyrLib from 'plyr';
 import 'plyr/dist/plyr.css';
 import { useRadio } from '../../contexts/RadioContext';
 
+const Plyr = (PlyrLib as any).default || PlyrLib;
+
 export function RadioPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const { 
-    currentStation, 
-    isPlaying, 
-    volume, 
-    isMuted,
-    setIsPlaying, 
-    setVolume, 
-    setIsMuted,
-    playerRef 
-  } = useRadio();
+  const { currentStation, playerRef } = useRadio();
 
   useEffect(() => {
     if (!audioRef.current) return;
 
     const player = new Plyr(audioRef.current, {
-      controls: [],
-      volume: volume,
+      controls: ['play', 'progress', 'current-time', 'volume', 'mute'],
+      hideControls: false,
+      clickToPlay: true,
+      displayDuration: false,
     });
 
-    // @ts-ignore - playerRef é modificável internamente
+    // @ts-ignore
     playerRef.current = player;
-
-    player.on('playing', () => {
-      setIsPlaying(true);
-    });
-
-    player.on('pause', () => {
-      setIsPlaying(false);
-    });
-
-    player.on('volumechange', () => {
-      setVolume(player.volume);
-      setIsMuted(player.muted);
-    });
-
-    player.on('error', (error: any) => {
-      console.error('Erro no stream:', error);
-      setIsPlaying(false);
-    });
 
     return () => player.destroy();
   }, []);
@@ -60,37 +37,25 @@ export function RadioPlayer() {
         },
       ],
     };
-
-    if (isPlaying) {
-      playerRef.current.play();
-    }
   }, [currentStation]);
 
-  useEffect(() => {
-    if (!playerRef.current) return;
-
-    if (isPlaying) {
-      playerRef.current.play().catch(console.error);
-    } else {
-      playerRef.current.pause();
-    }
-  }, [isPlaying]);
-
-  useEffect(() => {
-    if (!playerRef.current) return;
-    playerRef.current.volume = volume;
-  }, [volume]);
-
-  useEffect(() => {
-    if (!playerRef.current) return;
-    playerRef.current.muted = isMuted;
-  }, [isMuted]);
-
   return (
-    <audio ref={audioRef} style={{ display: 'none' }}>
+    <div className="w-full max-w-2xl mx-auto mb-8">
       {currentStation && (
-        <source src={currentStation.streamUrl} type="audio/mpeg" />
+        <div className="bg-gray-800 rounded-lg p-6 mb-4">
+          <h3 className="text-2xl font-bold text-white mb-2 text-center">
+            {currentStation.name}
+          </h3>
+          <p className="text-purple-400 text-center mb-4">
+            {currentStation.genre}
+          </p>
+        </div>
       )}
-    </audio>
+      <audio ref={audioRef}>
+        {currentStation && (
+          <source src={currentStation.streamUrl} type="audio/mpeg" />
+        )}
+      </audio>
+    </div>
   );
 }
