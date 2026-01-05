@@ -1,0 +1,14 @@
+[Unit]
+Description=BHVR Service (Rhythm Place)
+After=network.target
+
+[Service]
+Type=simple
+User=nginx
+WorkingDirectory=/var/www/rhythm-place
+ExecStart=/home/nginx/.bun/bin/bun run start:single
+Restart=on-failure
+
+[Install]
+# start the app automatically
+WantedBy=multi-user.target

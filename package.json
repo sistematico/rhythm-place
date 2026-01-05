@@ -18,6 +18,11 @@
 		"build": "turbo build",
 		"build:client": "turbo build --filter=client",
 		"build:server": "turbo build --filter=server",
+		"build:single": "bun run build && bun run copy:static && bun run build:server",
+    "copy:static": "rm -rf server/static && cp -r client/dist server/static",
+    "start:single": "cd server && bun run dist/index.js",
+		"push": "cd server && bunx drizzle-kit push && cd ..",
+		"seed": "cd server && bun run src/db/seed.ts && cd ..",
 		"lint": "biome lint .",
 		"type-check": "turbo type-check",
 		"test": "turbo test",
@@ -35,7 +40,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.11",
 		"bun-types": "latest",
-		"turbo": "^2.5.5"
+		"turbo": "^2.7.3"
 	},
 	"peerDependencies": {
 		"typescript": "^5.7.3"

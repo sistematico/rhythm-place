@@ -8,15 +8,13 @@ export const Route = createFileRoute("/")({
 	component: Index,
 });
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
-
 function Index() {
 	const [data, setData] = useState<ApiResponse | undefined>();
 
 	const { mutate: sendRequest } = useMutation({
 		mutationFn: async () => {
 			try {
-				const req = await fetch(`${SERVER_URL}/hello`);
+				const req = await fetch('/hello');
 				const res: ApiResponse = await req.json();
 				setData(res);
 			} catch (error) {

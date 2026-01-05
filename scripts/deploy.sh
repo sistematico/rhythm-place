@@ -14,11 +14,16 @@ rm -rf $TEMP_DIR
 cp -a $PROJECT_DIR $TEMP_DIR
 cd $TEMP_DIR
 
+git clean -fxd -e server/.env -e client/.env -e server/local.db
+cp -f server/.env.production server/.env
+
 bun install
+bun run push
+bun run seed
 
 sudo /usr/bin/systemctl stop $SERVICE
 
-bun run build && { 
+bun run build:single && { 
   cd ~
   rm -rf $PROJECT_DIR
   mv $TEMP_DIR $PROJECT_DIR 

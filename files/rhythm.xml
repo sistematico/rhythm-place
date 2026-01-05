@@ -1,0 +1,94 @@
+<icecast>
+    <location>Brazil</location>
+    <admin>sistematico@gmail.com</admin>
+
+    <limits>
+        <clients>5000</clients>
+        <sources>10</sources>
+        <queue-size>102400</queue-size>
+        <client-timeout>30</client-timeout>
+        <header-timeout>15</header-timeout>
+        <source-timeout>10</source-timeout>
+        <burst-on-connect>1</burst-on-connect>
+        <burst-size>65536</burst-size>
+    </limits>
+
+    <authentication>
+        <source-password>hackme</source-password>
+        <relay-password>hackme</relay-password>
+        <admin-user>admin</admin-user>
+        <admin-password>hackmeagain</admin-password>
+    </authentication>
+
+    <directory>
+        <yp-url-timeout>15</yp-url-timeout>
+        <yp-url>http://dir.xiph.org/cgi-bin/yp-cgi</yp-url>
+    </directory>
+
+    <hostname>stream.rhythm.place</hostname>
+
+    <mount type="default">
+        <charset>UTF-8</charset>
+    </mount>
+
+    <listen-socket>
+        <port>8090</port>
+        <mount-name>/main</mount-name>
+        <charset>UTF-8</charset>
+        <stream-name>Rhythm Place</stream-name>
+        <stream-description>Where Every Beat Finds You</stream-description>
+        <stream-url>https://rhythm.place</stream-url>
+        <genre>Various</genre>
+        <bitrate>128</bitrate>
+    </listen-socket>
+
+    <listen-socket>
+        <port>8092</port>
+        <mount-name>/dance</mount-name>
+        <charset>UTF-8</charset>
+        <stream-name>Rhythm Place</stream-name>
+        <stream-description>Where Every Beat Finds You</stream-description>
+        <stream-url>https://rhythm.place</stream-url>
+        <genre>Dance</genre>
+        <bitrate>128</bitrate>
+    </listen-socket>
+
+    <listen-socket>
+        <port>8094</port>
+        <mount-name>/rock</mount-name>
+        <charset>UTF-8</charset>
+        <stream-name>Rhythm Place</stream-name>
+        <stream-description>Where Every Beat Finds You</stream-description>
+        <stream-url>https://rhythm.place</stream-url>
+        <genre>Rock</genre>
+        <bitrate>128</bitrate>
+    </listen-socket>
+
+    <http-headers>
+        <header name="Access-Control-Allow-Origin" value="*" />
+    </http-headers>
+
+    <fileserve>1</fileserve>
+
+    <paths>
+        <basedir>/usr/share/icecast2</basedir>
+        <logdir>/var/log/icecast2</logdir>
+        <webroot>/usr/share/icecast2/web</webroot>
+        <adminroot>/usr/share/icecast2/admin</adminroot>
+	    <pidfile>/run/icecast2-rhythm.pid</pidfile>
+        <alias source="/" destination="/status.xsl"/>
+        <alias source="/json" destination="/status-json.xsl"/>
+        <ssl-certificate>/usr/share/icecast2/icecast-rhythm.pem</ssl-certificate>
+    </paths>
+
+    <logging>
+        <accesslog>access.log</accesslog>
+        <errorlog>error.log</errorlog>
+        <loglevel>1</loglevel> <!-- 4 Debug, 3 Info, 2 Warn, 1 Error -->
+        <logsize>10000</logsize> <!-- Max size of a logfile -->
+    </logging>
+
+    <security>
+        <chroot>0</chroot>
+    </security>
+</icecast>
