@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serveStatic } from "hono/bun";
 import { songRoutes } from "./routes";
-import type { ApiResponse } from "shared/dist";
+// import type { ApiResponse } from "shared/dist";
 
 const dev = import.meta.env.DEV;
 const port = dev ? 3000 : Number(process.env.PORT || 4060);
