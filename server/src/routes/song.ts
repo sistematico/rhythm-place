@@ -10,7 +10,7 @@ app.get('/:genre?', async (c) => {
 
   if (genre) {
     const [song] = await db.select().from(songs).where(eq(songs.genre, genre)).orderBy(sql`RANDOM()`).limit(1)
-    if (song) return c.json(song, 200)
+    if (song) return c.json({ song }, 200)
   }
 
   const [noGenreSong] = await db.select().from(songs).orderBy(sql`RANDOM()`).limit(1)

@@ -26,5 +26,5 @@ export const stations: Station[] = [
     name: 'Dance',
     genre: 'Dance',
     streamUrl: `${baseUrl}/dance`
-  },
+  }
 ]
