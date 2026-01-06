@@ -9,6 +9,7 @@ export function RadioPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null)
   const { currentStation, playerRef } = useRadio()
 
+  // Initialize player when station changes
   useEffect(() => {
     if (!audioRef.current || !currentStation) return
 
@@ -32,7 +33,12 @@ export function RadioPlayer() {
     playerRef.current = player
 
     return () => {
-      player.destroy()
+      try {
+        player.destroy()
+      } catch (e) {
+        // Ignore errors during cleanup
+      }
+      playerRef.current = null
     }
   }, [currentStation, playerRef])
 
@@ -44,7 +50,9 @@ export function RadioPlayer() {
           <p className="text-purple-400 text-center mb-4">{currentStation.genre}</p>
         </div>
       )}
-      <audio key={currentStation?.id} ref={audioRef} />
+      <div key={currentStation?.id}>
+        <audio ref={audioRef} />
+      </div>
     </div>
   )
 }
