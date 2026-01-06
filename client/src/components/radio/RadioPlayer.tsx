@@ -19,16 +19,19 @@ export function RadioPlayer() {
 			displayDuration: false,
 		});
 
-		// @ts-ignore
 		playerRef.current = player;
 
-		return () => player.destroy();
-	}, []);
+		return () => {
+			player.destroy();
+		};
+	}, [playerRef]);
 
 	useEffect(() => {
 		if (!playerRef.current || !currentStation) return;
 
-		playerRef.current.source = {
+		const player = playerRef.current;
+		
+		player.source = {
 			type: "audio",
 			sources: [
 				{
@@ -37,7 +40,7 @@ export function RadioPlayer() {
 				},
 			],
 		};
-	}, [currentStation]);
+	}, [currentStation, playerRef]);
 
 	return (
 		<div className="w-full max-w-2xl mx-auto mb-8">
