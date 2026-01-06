@@ -1,0 +1,1 @@
+export { songRoutes } from './song'

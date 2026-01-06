@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serveStatic } from "hono/bun";
+import { songRoutes } from "./routes";
 import type { ApiResponse } from "shared/dist";
 
 const dev = import.meta.env.DEV;
@@ -15,16 +16,17 @@ app.get("/api", (c) => {
 	return c.text("Hello Hono!");
 });
 
-app.get("/api/hello", async (c) => {
-	const data: ApiResponse = {
-		message: "Hello BHVR!",
-		success: true,
-	};
+// app.get("/api/hello", async (c) => {
+// 	const data: ApiResponse = {
+// 		message: "Hello BHVR!",
+// 		success: true,
+// 	};
 
-	return c.json(data, { status: 200 });
-});
+// 	return c.json(data, { status: 200 });
+// });
 
-// Servir arquivos estáticos do frontend
+app.route('/song', songRoutes)
+
 app.use("*", serveStatic({ root: "./static" }));
 
 // Fallback para SPA (Single Page Application)
