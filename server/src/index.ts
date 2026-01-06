@@ -10,11 +10,12 @@ const app = new Hono();
 
 app.use(cors());
 
-app.get("/", (c) => {
+// Rotas da API
+app.get("/api", (c) => {
 	return c.text("Hello Hono!");
 });
 
-app.get("/hello", async (c) => {
+app.get("/api/hello", async (c) => {
 	const data: ApiResponse = {
 		message: "Hello BHVR!",
 		success: true,
@@ -23,8 +24,10 @@ app.get("/hello", async (c) => {
 	return c.json(data, { status: 200 });
 });
 
+// Servir arquivos estáticos do frontend
 app.use("*", serveStatic({ root: "./static" }));
 
+// Fallback para SPA (Single Page Application)
 app.get("*", async (c, next) => {
 	return serveStatic({ root: "./static", path: "index.html" })(c, next);
 });
