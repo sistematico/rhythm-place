@@ -25,7 +25,7 @@ app.get("/api", (c) => {
 // 	return c.json(data, { status: 200 });
 // });
 
-app.route('/song', songRoutes)
+app.route("/song", songRoutes);
 
 app.use("*", serveStatic({ root: "./static" }));
 
