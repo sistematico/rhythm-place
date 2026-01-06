@@ -1,1 +1,1 @@
-export { songRoutes } from "./song";
+export { songRoutes } from './song'

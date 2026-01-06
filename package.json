@@ -1,48 +1,48 @@
 {
-	"name": "rhythm-place",
-	"version": "0.5.1",
-	"description": "A monorepo template built with Bun, Hono, Vite, and React",
-	"author": "Steve Simkins",
-	"license": "MIT",
-	"homepage": "https://github.com/stevedylandev/bhvr",
-	"packageManager": "bun@1.2.4",
-	"workspaces": [
-		"./server",
-		"./client",
-		"./shared"
-	],
-	"scripts": {
-		"dev": "turbo dev",
-		"dev:client": "turbo dev --filter=client",
-		"dev:server": "turbo dev --filter=server",
-		"build": "turbo build",
-		"build:client": "turbo build --filter=client",
-		"build:server": "turbo build --filter=server",
-		"build:single": "bun run build && bun run copy:static && bun run build:server",
-		"copy:static": "rm -rf server/static && cp -r client/dist server/static",
-		"start:single": "cd server && /home/nginx/.bun/bin/bun run dist/index.js",
-		"push": "cd server && bunx drizzle-kit push && cd ..",
-		"seed": "cd server && bun run src/db/seed.ts && cd ..",
-		"lint": "biome lint .",
-		"type-check": "turbo type-check",
-		"test": "turbo test",
-		"postinstall": "turbo build --filter=shared --filter=server",
-		"format": "biome format . --write"
-	},
-	"keywords": [
-		"bun",
-		"hono",
-		"react",
-		"vite",
-		"monorepo",
-		"turbo"
-	],
-	"devDependencies": {
-		"@biomejs/biome": "^2.3.11",
-		"bun-types": "latest",
-		"turbo": "^2.7.3"
-	},
-	"peerDependencies": {
-		"typescript": "^5.7.3"
-	}
+  "name": "rhythm-place",
+  "version": "0.5.1",
+  "description": "A monorepo template built with Bun, Hono, Vite, and React",
+  "author": "Steve Simkins",
+  "license": "MIT",
+  "homepage": "https://github.com/stevedylandev/bhvr",
+  "packageManager": "bun@1.2.4",
+  "workspaces": [
+    "./server",
+    "./client",
+    "./shared"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:client": "turbo dev --filter=client",
+    "dev:server": "turbo dev --filter=server",
+    "build": "turbo build",
+    "build:client": "turbo build --filter=client",
+    "build:server": "turbo build --filter=server",
+    "build:single": "bun run build && bun run copy:static && bun run build:server",
+    "copy:static": "rm -rf server/static && cp -r client/dist server/static",
+    "start:single": "cd server && /home/nginx/.bun/bin/bun run dist/index.js",
+    "push": "cd server && bunx drizzle-kit push && cd ..",
+    "seed": "cd server && bun run src/db/seed.ts && cd ..",
+    "lint": "biome lint .",
+    "type-check": "turbo type-check",
+    "test": "turbo test",
+    "postinstall": "turbo build --filter=shared --filter=server",
+    "format": "biome format . --write"
+  },
+  "keywords": [
+    "bun",
+    "hono",
+    "react",
+    "vite",
+    "monorepo",
+    "turbo"
+  ],
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "bun-types": "latest",
+    "turbo": "^2.7.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  }
 }
