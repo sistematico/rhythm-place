@@ -10,7 +10,7 @@ export function RadioPlayer() {
 	const { currentStation, playerRef } = useRadio();
 
 	useEffect(() => {
-		if (!audioRef.current) return;
+		if (!audioRef.current || !currentStation) return;
 
 		const player = new Plyr(audioRef.current, {
 			controls: ["play", "progress", "current-time", "volume", "mute"],
@@ -18,18 +18,6 @@ export function RadioPlayer() {
 			clickToPlay: true,
 			displayDuration: false,
 		});
-
-		playerRef.current = player;
-
-		return () => {
-			player.destroy();
-		};
-	}, [playerRef]);
-
-	useEffect(() => {
-		if (!playerRef.current || !currentStation) return;
-
-		const player = playerRef.current;
 
 		player.source = {
 			type: "audio",
@@ -39,6 +27,12 @@ export function RadioPlayer() {
 					type: "audio/mpeg",
 				},
 			],
+		};
+
+		playerRef.current = player;
+
+		return () => {
+			player.destroy();
 		};
 	}, [currentStation, playerRef]);
 
@@ -54,11 +48,7 @@ export function RadioPlayer() {
 					</p>
 				</div>
 			)}
-			<audio ref={audioRef}>
-				{currentStation && (
-					<source src={currentStation.streamUrl} type="audio/mpeg" />
-				)}
-			</audio>
+			<audio key={currentStation?.id} ref={audioRef} />
 		</div>
 	);
 }
