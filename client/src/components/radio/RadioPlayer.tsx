@@ -30,7 +30,7 @@ export function RadioPlayer() {
 		if (!playerRef.current || !currentStation) return;
 
 		const player = playerRef.current;
-		
+
 		player.source = {
 			type: "audio",
 			sources: [
