@@ -5,7 +5,7 @@ Requires=rhythm-liquidsoap.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/radio-autoplay.sh
+ExecStart=/usr/local/bin/rhythm-autoplay.sh
 RemainAfterExit=yes
 
 [Install]
