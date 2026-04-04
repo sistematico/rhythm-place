@@ -1,0 +1,12 @@
+[Unit]
+Description=Auto-resume Spotify playback on Rhythm Place
+After=rhythm-liquidsoap.service
+Requires=rhythm-liquidsoap.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/radio-autoplay.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

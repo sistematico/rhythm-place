@@ -1,3 +1,3 @@
 export const config = {
-  streamUrl: "https://stream.rhythm.place/main.mp3",
+  streamUrl: process.env.NEXT_PUBLIC_STREAM_URL || "https://stream.rhythm.place/main.mp3",
 };

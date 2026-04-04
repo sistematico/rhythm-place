@@ -6,6 +6,8 @@ Documentation=http://liquidsoap.fm
 [Service]
 Type=simple
 User=liquidsoap
+MemoryMax=400M
+MemoryHigh=400M
 PIDFile=/run/rhythm-liquidsoap.pid
 ExecStart=/usr/bin/liquidsoap /etc/liquidsoap/rhythm.liq
 Restart=on-failure

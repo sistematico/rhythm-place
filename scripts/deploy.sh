@@ -12,7 +12,7 @@ cp -a "$PROJECT_DIR" "$TEMP_DIR"
 cd "$TEMP_DIR" || exit 1
 
 git clean -fxd
-# cp .env .env.production 
+#cp .env .env.production 
 
 bun install
 

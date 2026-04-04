@@ -1,0 +1,20 @@
+[Unit]
+Description=Librespot - Spotify Connect (Rhythm Place)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/librespot \
+  --name "Rhythm Place" \
+  --bitrate 320 \
+  --backend pipe \
+  --device /srv/radio/spotify.pcm \
+  --cache /var/cache/librespot \
+  --initial-volume 100 \
+  --enable-volume-normalisation \
+  --format S16
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
