@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+ICECAST_PATH="/usr/share/icecast2"
+umask 077
+cat /etc/letsencrypt/live/rhythm.place/fullchain.pem /etc/letsencrypt/live/rhythm.place/privkey.pem > $ICECAST_PATH/icecast-rhythm.pem
+chown icecast2:icecast2 $ICECAST_PATH/*.pem
+systemctl reload rhythm-icecast.service

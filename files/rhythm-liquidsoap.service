@@ -1,0 +1,15 @@
+[Unit]
+Description=Liquidsoap daemon (Rhythm Place)
+After=network.target rhythm-icecast.service
+Documentation=http://liquidsoap.fm
+
+[Service]
+Type=simple
+User=liquidsoap
+PIDFile=/run/rhythm-liquidsoap.pid
+ExecStart=/usr/bin/liquidsoap /etc/liquidsoap/rhythm.liq
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

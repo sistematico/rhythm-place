@@ -25,31 +25,25 @@
     <yp-url>http://dir.xiph.org/cgi-bin/yp-cgi</yp-url>
   </directory>
 
-  <hostname>somdomato.com</hostname>
+  <hostname>rhythm.place</hostname>
 
   <mount type="default">
     <charset>UTF-8</charset>
   </mount>
 
   <listen-socket>
-    <port>8000</port>
-    <mount-name>/radio.mp3</mount-name>
+    <port>9000</port>
+    <mount-name>/main.mp3</mount-name>
     <charset>UTF-8</charset>
-    <stream-name>Radio Som do Mato</stream-name>
-    <stream-description>A mais sertaneja</stream-description>
-    <stream-url>https://somdomato.com</stream-url>
-    <genre>Sertanejo</genre>
+    <stream-name>Rhythm Place</stream-name>
+    <stream-description>A place to dance</stream-description>
+    <stream-url>https://rhythm.place</stream-url>
+    <genre>Various</genre>
     <bitrate>128</bitrate>
   </listen-socket>
 
-  <!-- <listen-socket>
-        <port>8010</port>
-        <mount-name>/aovivo</mount-name>
-        <charset>UTF-8</charset>
-    </listen-socket> -->
-
   <listen-socket>
-    <port>8443</port>
+    <port>9443</port>
     <ssl>1</ssl>
   </listen-socket>
 
@@ -64,10 +58,10 @@
     <logdir>/var/log/icecast2</logdir>
     <webroot>/usr/share/icecast2/web</webroot>
     <adminroot>/usr/share/icecast2/admin</adminroot>
-    <pidfile>/run/icecast2-somdomato.pid</pidfile>
+    <pidfile>/run/rhythm-icecast.pid</pidfile>
     <alias source="/" destination="/status.xsl" />
     <alias source="/json" destination="/status-json.xsl" />
-    <ssl-certificate>/usr/share/icecast2/icecast-somdomato.pem</ssl-certificate>
+    <ssl-certificate>/usr/share/icecast2/icecast-rhythm.pem</ssl-certificate>
   </paths>
 
   <logging>

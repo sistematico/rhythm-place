@@ -1,4 +1,4 @@
-export default function Player(source: string) {
+export default function Player({ source }: { source: string }) {
   return (
     <audio controls>
       <source src={source} type="audio/mpeg" />
