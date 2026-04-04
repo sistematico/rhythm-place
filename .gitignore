@@ -43,3 +43,6 @@ next-env.d.ts
 
 drizzle/**
 !drizzle/.gitkeep
+/usr/local/bin/radio-autoplay.sh
+/usr/local/bin/rhythm-autoplay.sh
+files/rhythm-autoplay.sh
