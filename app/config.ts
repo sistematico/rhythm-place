@@ -1,3 +1,3 @@
 export const config = {
-  streamUrl: "https://example.com/stream",
+  streamUrl: "https://stream.rhythm.place/main.mp3",
 };
