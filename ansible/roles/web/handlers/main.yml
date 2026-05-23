@@ -1,14 +1,24 @@
 ---
-- name: daemon reload
+- name: Daemon reload
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: reload nginx
+- name: Reload nginx
   ansible.builtin.systemd:
     name: nginx
     state: reloaded
 
-- name: restart nextjs
+- name: Restart nextjs
   ansible.builtin.systemd:
     name: rhythm-place
+    state: restarted
+
+- name: Restart icecast2
+  ansible.builtin.systemd:
+    name: icecast2
+    state: restarted
+
+- name: Restart liquidsoap
+  ansible.builtin.systemd:
+    name: liquidsoap-rhythm-place
     state: restarted

@@ -1,4 +1,21 @@
 ---
-# Copy to vault.yml and encrypt with ansible-vault.
-# Cloudflare API token needs Zone:DNS:Edit for rhythm.place.
-vault_cloudflare_api_token: "replace-me"
+# ─── Ansible Vault — exemplo de estrutura ──────────────────────────────────────
+# Copie este arquivo para ansible/group_vars/all/vault.yml e criptografe com:
+#   ansible-vault encrypt ansible/group_vars/all/vault.yml
+#
+# Para criar direto já criptografado:
+#   ansible-vault create ansible/group_vars/all/vault.yml
+#
+# Account ID: https://dash.cloudflare.com → selecione qualquer domínio → barra lateral direita
+# API Token:  https://dash.cloudflare.com/profile/api-tokens → "Create Token"
+#   Modelo sugerido: "Edit zone DNS"
+#   Permissões:  Zone > DNS > Edit
+#   Zone Resources: Include > Specific zone > privatehub.com.br (repetir para pvthub.com)
+
+cloudflare_account_id: "SEU_ACCOUNT_ID_AQUI"
+cloudflare_api_token: "SEU_TOKEN_AQUI"
+
+# ─── Icecast2 ──────────────────────────────────────────────────────────────────
+icecast_source_password: "SENHA_SOURCE_AQUI"
+icecast_relay_password: "SENHA_RELAY_AQUI"
+icecast_admin_password: "SENHA_ADMIN_AQUI"

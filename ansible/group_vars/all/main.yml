@@ -4,7 +4,7 @@ app_domain: rhythm.place
 app_user: nginx
 app_group: nginx
 app_root: /srv/rhythm.place
-app_repo: "https://github.com/your-org/rhythm-place.git"
+app_repo: "git@github.com:sistematico/rhythm-place.git"
 app_branch: main
 app_port: 3000
 nodejs_major: "22"
@@ -19,3 +19,15 @@ letsencrypt_domains:
 
 # First cert name must be rhythm.place so certbot stores certs in /etc/letsencrypt/live/rhythm.place/
 letsencrypt_cert_name: rhythm.place
+
+# ─── Icecast2 ──────────────────────────────────────────────────────────────────
+icecast_hostname: "{{ app_domain }}"
+icecast_port: 8000
+icecast_max_clients: 100
+icecast_max_sources: 5
+icecast_location: Earth
+icecast_admin_email: "{{ letsencrypt_email }}"
+
+# ─── Liquidsoap ────────────────────────────────────────────────────────────────
+liquidsoap_mount: /stream
+liquidsoap_playlist_dir: /var/lib/liquidsoap/playlists

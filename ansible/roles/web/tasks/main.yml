@@ -9,8 +9,12 @@
       - nginx
       - certbot
       - python3-certbot-dns-cloudflare
+      - unzip
+      - icecast2
+      - liquidsoap
     state: present
     update_cache: true
+    cache_valid_time: 3600
 
 - name: Ensure app runtime group exists
   ansible.builtin.group:
@@ -83,7 +87,7 @@
     dest: "{{ app_root }}"
     version: "{{ app_branch }}"
     force: true
-  become_user: "{{ app_user }}"
+  register: git_checkout
   notify: restart nextjs
 
 - name: Install JS dependencies with Bun
@@ -91,6 +95,7 @@
   args:
     chdir: "{{ app_root }}"
   become_user: "{{ app_user }}"
+  when: git_checkout.changed
   notify: restart nextjs
 
 - name: Build Next.js app
@@ -98,6 +103,7 @@
   args:
     chdir: "{{ app_root }}"
   become_user: "{{ app_user }}"
+  when: git_checkout.changed
   notify: restart nextjs
 
 - name: Deploy systemd unit for Next.js
@@ -106,8 +112,8 @@
     dest: /etc/systemd/system/rhythm-place.service
     mode: "0644"
   notify:
-    - daemon reload
-    - restart nextjs
+    - Daemon reload
+    - Restart nextjs
 
 - name: Ensure certbot webroot exists
   ansible.builtin.file:
@@ -169,6 +175,80 @@
 - name: Ensure nginx is enabled and running
   ansible.builtin.systemd:
     name: nginx
+    enabled: true
+    state: started
+
+# ─── Icecast2 ──────────────────────────────────────────────────────────────────
+
+- name: Configure Icecast2
+  ansible.builtin.template:
+    src: icecast.xml.j2
+    dest: /etc/icecast2/icecast.xml
+    owner: root
+    group: icecast
+    mode: "0640"
+  notify: restart icecast2
+
+- name: Enable Icecast2 in /etc/default/icecast2
+  ansible.builtin.lineinfile:
+    path: /etc/default/icecast2
+    regexp: '^ENABLE='
+    line: 'ENABLE=true'
+  notify: restart icecast2
+
+- name: Ensure Icecast2 is enabled and running
+  ansible.builtin.systemd:
+    name: icecast2
+    enabled: true
+    state: started
+
+# ─── Liquidsoap ────────────────────────────────────────────────────────────────
+
+- name: Ensure Liquidsoap config directory exists
+  ansible.builtin.file:
+    path: /etc/liquidsoap
+    state: directory
+    owner: root
+    group: liquidsoap
+    mode: "0750"
+
+- name: Ensure Liquidsoap playlist directory exists
+  ansible.builtin.file:
+    path: "{{ liquidsoap_playlist_dir }}"
+    state: directory
+    owner: liquidsoap
+    group: liquidsoap
+    mode: "0755"
+
+- name: Ensure Liquidsoap log directory exists
+  ansible.builtin.file:
+    path: /var/log/liquidsoap
+    state: directory
+    owner: liquidsoap
+    group: liquidsoap
+    mode: "0755"
+
+- name: Deploy Liquidsoap stream script
+  ansible.builtin.template:
+    src: liquidsoap-rhythm-place.liq.j2
+    dest: /etc/liquidsoap/rhythm-place.liq
+    owner: root
+    group: liquidsoap
+    mode: "0640"
+  notify: Restart liquidsoap
+
+- name: Deploy Liquidsoap systemd unit
+  ansible.builtin.template:
+    src: liquidsoap.service.j2
+    dest: /etc/systemd/system/liquidsoap-rhythm-place.service
+    mode: "0644"
+  notify:
+    - Daemon reload
+    - Restart liquidsoap
+
+- name: Ensure Liquidsoap service is enabled and running
+  ansible.builtin.systemd:
+    name: liquidsoap-rhythm-place
     enabled: true
     state: started
 

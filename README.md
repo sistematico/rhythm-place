@@ -53,7 +53,7 @@ A role esta preparada para DNS challenge da Cloudflare.
 Segredo esperado em `ansible/group_vars/all/vault.yml`:
 
 ```yaml
-vault_cloudflare_api_token: "<TOKEN_COM_PERMISSAO_DNS_EDIT>"
+cloudflare_api_token: "<TOKEN_COM_PERMISSAO_DNS_EDIT>"
 ```
 
 Passos:
