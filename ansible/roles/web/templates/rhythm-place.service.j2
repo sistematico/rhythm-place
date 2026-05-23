@@ -1,0 +1,24 @@
+[Unit]
+Description=Rhythm Place Next.js Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_root }}
+Environment=NODE_ENV=production
+Environment=PORT={{ app_port }}
+ExecStart=/usr/local/bin/bun --bun next start --port {{ app_port }}
+Restart=always
+RestartSec=5
+TimeoutStartSec=120
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths={{ app_root }}
+
+[Install]
+WantedBy=multi-user.target

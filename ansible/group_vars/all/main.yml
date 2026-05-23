@@ -1,0 +1,21 @@
+---
+app_name: rhythm-place
+app_domain: rhythm.place
+app_user: nginx
+app_group: nginx
+app_root: /srv/rhythm.place
+app_repo: "https://github.com/your-org/rhythm-place.git"
+app_branch: main
+app_port: 3000
+nodejs_major: "22"
+
+# DNS provider used by certbot DNS challenge.
+# Valid values in this role: cloudflare
+letsencrypt_dns_provider: cloudflare
+letsencrypt_email: admin@rhythm.place
+letsencrypt_domains:
+  - rhythm.place
+  - "*.rhythm.place"
+
+# First cert name must be rhythm.place so certbot stores certs in /etc/letsencrypt/live/rhythm.place/
+letsencrypt_cert_name: rhythm.place

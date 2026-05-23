@@ -1,0 +1,4 @@
+---
+# Copy to vault.yml and encrypt with ansible-vault.
+# Cloudflare API token needs Zone:DNS:Edit for rhythm.place.
+vault_cloudflare_api_token: "replace-me"

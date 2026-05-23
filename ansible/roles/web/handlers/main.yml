@@ -1,0 +1,14 @@
+---
+- name: daemon reload
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: reload nginx
+  ansible.builtin.systemd:
+    name: nginx
+    state: reloaded
+
+- name: restart nextjs
+  ansible.builtin.systemd:
+    name: rhythm-place
+    state: restarted

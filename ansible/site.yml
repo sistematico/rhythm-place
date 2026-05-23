@@ -1,0 +1,8 @@
+---
+- name: Provision Rhythm Place
+  hosts: ate
+  become: true
+  vars_files:
+    - group_vars/all/vault.yml
+  roles:
+    - web
