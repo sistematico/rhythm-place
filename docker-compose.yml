@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    volumes:
+      - .:/app
+      - app_node_modules:/app/node_modules
+      - app_next:/app/.next
+    networks:
+      - rhythm
+    depends_on:
+      - icecast
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "8000:8000"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+      - icecast
+    networks:
+      - rhythm
+
+  icecast:
+    build:
+      context: docker/icecast
+    env_file: .env.docker
+    networks:
+      - rhythm
+
+  liquidsoap:
+    build:
+      context: docker/liquidsoap
+    env_file: .env.docker
+    volumes:
+      - ./docker/liquidsoap/rhythm-place.liq:/etc/liquidsoap/rhythm-place.liq:ro
+      - ./playlists:/var/lib/liquidsoap/playlists:ro
+    depends_on:
+      - icecast
+    networks:
+      - rhythm
+
+volumes:
+  app_node_modules:
+  app_next:
+
+networks:
+  rhythm:
+    driver: bridge

@@ -1,4 +1,26 @@
 ---
+- name: Update apt cache after NodeSource setup
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install JS dependencies with Bun
+  ansible.builtin.command: /home/nginx/.bun/bin/bun install --frozen-lockfile
+  args:
+    chdir: "{{ app_root }}"
+  become: true
+  become_user: "{{ app_user }}"
+  changed_when: false
+  notify: Build Next.js app
+
+- name: Build Next.js app
+  ansible.builtin.command: /home/nginx/.bun/bin/bun run build
+  args:
+    chdir: "{{ app_root }}"
+  become: true
+  become_user: "{{ app_user }}"
+  changed_when: true
+  notify: Restart nextjs
+
 - name: Daemon reload
   ansible.builtin.systemd:
     daemon_reload: true

@@ -10,11 +10,23 @@
       - certbot
       - python3-certbot-dns-cloudflare
       - unzip
+      - ufw
       - icecast2
       - liquidsoap
     state: present
     update_cache: true
     cache_valid_time: 3600
+
+- name: Enable ufw
+  community.general.ufw:
+    state: enabled
+
+- name: Allow outbound git protocol (port 9418)
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "9418"
+    proto: tcp
 
 - name: Ensure app runtime group exists
   ansible.builtin.group:
@@ -26,7 +38,7 @@
     name: "{{ app_user }}"
     group: "{{ app_group }}"
     create_home: true
-    home: /var/lib/nginx
+    home: /home/nginx
     shell: /usr/sbin/nologin
     system: true
 
@@ -47,31 +59,39 @@
     mode: "0644"
     content: |
       deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_{{ nodejs_major }}.x nodistro main
-  register: nodesource_repo
-
-- name: Update apt cache after NodeSource setup
-  ansible.builtin.apt:
-    update_cache: true
-  when: nodesource_repo.changed
+  notify: Update apt cache after NodeSource setup
 
 - name: Install Node.js LTS
   ansible.builtin.apt:
     name: nodejs
     state: present
 
+- name: Ensure nginx Ansible tmp dir exists
+  ansible.builtin.file:
+    path: /home/nginx/.ansible/tmp
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0700"
+
 - name: Check Bun installation
   ansible.builtin.stat:
-    path: /usr/local/bin/bun
-  register: bun_bin
+    path: /home/nginx/.bun/bin/bun
+  register: web_bun_bin
 
 - name: Install Bun latest
   ansible.builtin.shell: |
     set -euo pipefail
     curl -fsSL https://bun.sh/install | bash
-    install -m 0755 /root/.bun/bin/bun /usr/local/bin/bun
+  environment:
+    HOME: /home/nginx
+    BUN_INSTALL: /home/nginx/.bun
   args:
     executable: /bin/bash
-  when: not bun_bin.stat.exists
+  become: true
+  become_user: "{{ app_user }}"
+  when: not web_bun_bin.stat.exists
+  changed_when: true
 
 - name: Ensure app root exists
   ansible.builtin.file:
@@ -81,30 +101,65 @@
     group: "{{ app_group }}"
     mode: "0755"
 
+- name: Check if app root has a .git/config
+  ansible.builtin.stat:
+    path: "{{ app_root }}/.git/config"
+  register: web_git_config
+
+- name: Read git config if present
+  ansible.builtin.slurp:
+    src: "{{ app_root }}/.git/config"
+  register: web_git_config_content
+  when: web_git_config.stat.exists
+
+- name: Remove app root if git remote is missing or wrong
+  ansible.builtin.file:
+    path: "{{ app_root }}"
+    state: absent
+  when: >-
+    not web_git_config.stat.exists or
+    app_repo not in (web_git_config_content.content | b64decode)
+
+- name: Ensure root .ssh directory exists
+  ansible.builtin.file:
+    path: /root/.ssh
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Deploy GitHub deploy key
+  ansible.builtin.copy:
+    content: "{{ github_deploy_key }}"
+    dest: /root/.ssh/rhythm-place-deploy
+    owner: root
+    group: root
+    mode: "0600"
+  no_log: true
+
+- name: Add GitHub to known_hosts
+  ansible.builtin.known_hosts:
+    name: github.com
+    key: "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+    state: present
+
+- name: Mark app root as safe git directory
+  community.general.git_config:
+    name: safe.directory
+    scope: global
+    value: "{{ app_root }}"
+    state: present
+
 - name: Checkout application repository
   ansible.builtin.git:
     repo: "{{ app_repo }}"
     dest: "{{ app_root }}"
     version: "{{ app_branch }}"
     force: true
-  register: git_checkout
-  notify: restart nextjs
-
-- name: Install JS dependencies with Bun
-  ansible.builtin.command: bun install --frozen-lockfile
-  args:
-    chdir: "{{ app_root }}"
-  become_user: "{{ app_user }}"
-  when: git_checkout.changed
-  notify: restart nextjs
-
-- name: Build Next.js app
-  ansible.builtin.command: bun run build
-  args:
-    chdir: "{{ app_root }}"
-  become_user: "{{ app_user }}"
-  when: git_checkout.changed
-  notify: restart nextjs
+    key_file: /root/.ssh/rhythm-place-deploy
+    accept_hostkey: false
+  register: web_git_checkout
+  notify: Install JS dependencies with Bun
 
 - name: Deploy systemd unit for Next.js
   ansible.builtin.template:
@@ -128,20 +183,20 @@
     src: nginx-rhythm-place.conf.j2
     dest: /etc/nginx/sites-available/rhythm.place.conf
     mode: "0644"
-  notify: reload nginx
+  notify: Reload nginx
 
 - name: Enable Nginx site
   ansible.builtin.file:
     src: /etc/nginx/sites-available/rhythm.place.conf
     dest: /etc/nginx/sites-enabled/rhythm.place.conf
     state: link
-  notify: reload nginx
+  notify: Reload nginx
 
 - name: Disable default nginx site
   ansible.builtin.file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  notify: reload nginx
+  notify: Reload nginx
 
 - name: Install certbot DNS provider credentials
   ansible.builtin.template:
@@ -164,7 +219,7 @@
     -d {{ letsencrypt_domains[1] }}
   args:
     creates: "/etc/letsencrypt/live/{{ letsencrypt_cert_name }}/fullchain.pem"
-  notify: reload nginx
+  notify: Reload nginx
 
 - name: Ensure certbot auto-renew timer is enabled
   ansible.builtin.systemd:
@@ -187,14 +242,14 @@
     owner: root
     group: icecast
     mode: "0640"
-  notify: restart icecast2
+  notify: Restart icecast2
 
 - name: Enable Icecast2 in /etc/default/icecast2
   ansible.builtin.lineinfile:
     path: /etc/default/icecast2
     regexp: '^ENABLE='
     line: 'ENABLE=true'
-  notify: restart icecast2
+  notify: Restart icecast2
 
 - name: Ensure Icecast2 is enabled and running
   ansible.builtin.systemd:
@@ -257,6 +312,17 @@
     name: rhythm-place
     enabled: true
     state: started
+
+# ─── Sudoers ───────────────────────────────────────────────────────────────────
+
+- name: Allow app user to run systemctl without password
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/{{ app_user }}-systemctl
+    content: "{{ app_user }} ALL=(root) NOPASSWD: /usr/bin/systemctl\n"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: visudo -cf %s
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

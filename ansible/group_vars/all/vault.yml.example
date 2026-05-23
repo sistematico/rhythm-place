@@ -15,6 +15,16 @@
 cloudflare_account_id: "SEU_ACCOUNT_ID_AQUI"
 cloudflare_api_token: "SEU_TOKEN_AQUI"
 
+# ─── GitHub Deploy Key ────────────────────────────────────────────────────────
+# Gere com: ssh-keygen -t ed25519 -C "deploy@rhythm.place" -f /tmp/rhythm-place-deploy
+# Adicione /tmp/rhythm-place-deploy.pub em:
+#   https://github.com/sistematico/rhythm-place/settings/keys
+# Cole o conteúdo de /tmp/rhythm-place-deploy abaixo (chave privada):
+github_deploy_key: |
+  -----BEGIN OPENSSH PRIVATE KEY-----
+  COLE_A_CHAVE_PRIVADA_AQUI
+  -----END OPENSSH PRIVATE KEY-----
+
 # ─── Icecast2 ──────────────────────────────────────────────────────────────────
 icecast_source_password: "SENHA_SOURCE_AQUI"
 icecast_relay_password: "SENHA_RELAY_AQUI"

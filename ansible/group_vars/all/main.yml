@@ -3,16 +3,16 @@ app_name: rhythm-place
 app_domain: rhythm.place
 app_user: nginx
 app_group: nginx
-app_root: /srv/rhythm.place
-app_repo: "git@github.com:sistematico/rhythm-place.git"
+app_root: /var/www/rhythm.place
+app_repo: "https://github.com/sistematico/rhythm-place.git"
 app_branch: main
-app_port: 3000
-nodejs_major: "22"
+app_port: 3030
+nodejs_major: "24"
 
 # DNS provider used by certbot DNS challenge.
 # Valid values in this role: cloudflare
 letsencrypt_dns_provider: cloudflare
-letsencrypt_email: admin@rhythm.place
+letsencrypt_email: sistematico@gmail.com
 letsencrypt_domains:
   - rhythm.place
   - "*.rhythm.place"

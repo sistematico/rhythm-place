@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.*.example
+
+# docker dev secrets
+.env.docker
+
+# local music files for liquidsoap
+/playlists/
 
 # vercel
 .vercel
