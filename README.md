@@ -21,9 +21,11 @@ Automacao de infraestrutura e deploy para o app Next.js (`next@latest`) com:
 - `scripts/ansible-provision.sh`: roda `ansible-playbook`
 - `scripts/deploy.sh`: atalho de deploy
 
-## O que a role configura
+## O que as roles configuram
 
-1. Instala pacotes base (`nginx`, `certbot`, plugin DNS Cloudflare, `git`, `icecast2`, `liquidsoap`, etc.).
+### Role `web`
+
+1. Instala pacotes base (`nginx`, `certbot`, plugin DNS Cloudflare, `git`, etc.).
 2. Instala Node.js 24 LTS via NodeSource.
 3. Instala Bun (latest) em `/home/nginx/.bun/bin/bun`.
 4. Garante usuario/grupo `nginx` para runtime da app.
@@ -35,8 +37,12 @@ Automacao de infraestrutura e deploy para o app Next.js (`next@latest`) com:
    - `rhythm.place`
    - `*.rhythm.place`
 10. Habilita `certbot.timer` para renovacao automatica.
-11. Configura e inicia Icecast2 (escutando em `127.0.0.1:8000`).
-12. Cria script Liquidsoap em `/etc/liquidsoap/rhythm-place.liq` e inicia o servico `liquidsoap-rhythm-place.service`.
+
+### Role `radio`
+
+1. Instala `icecast2` e `liquidsoap`.
+2. Configura e inicia Icecast2 (escutando em `127.0.0.1:8000`).
+3. Cria script Liquidsoap em `/etc/liquidsoap/rhythm-place.liq` e inicia o servico `liquidsoap-rhythm-place.service`.
 
 ## Variaveis principais
 
