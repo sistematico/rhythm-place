@@ -15,17 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Prepare remote target
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASS }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            mkdir -p "${{ secrets.PROJECT_PATH }}"
-            test -w "${{ secrets.PROJECT_PATH }}"
-            stat -c '%U:%G %a %n' "${{ secrets.PROJECT_PATH }}"
       - name: Copy files via SSH
         uses: appleboy/scp-action@v1
         with:

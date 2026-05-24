@@ -45,13 +45,13 @@
     name: "{{ app_group }}"
     system: true
 
-- name: Ensure nginx user exists for app runtime
+- name: Ensure nginx user exists for app runtime and SSH deploy access
   ansible.builtin.user:
     name: "{{ app_user }}"
     group: "{{ app_group }}"
     create_home: true
     home: /home/nginx
-    shell: /usr/sbin/nologin
+    shell: /bin/bash
     system: true
 
 - name: Add NodeSource GPG key

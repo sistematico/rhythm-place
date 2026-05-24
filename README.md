@@ -104,7 +104,7 @@ ansible-vault edit ansible/group_vars/all/vault.yml --vault-password-file ansibl
 
 1. Ajuste `app_repo` em `ansible/group_vars/all/main.yml` (se necessario).
 2. Preencha e encripte o vault.
-3. Se usar GitHub Actions para deploy por SSH/SCP, configure `SSH_USER` como `root` ou outro usuario com shell habilitado e acesso de escrita ao `PROJECT_PATH`. Nao use o usuario `nginx`, porque ele e configurado com `/usr/sbin/nologin` para runtime da app.
+3. Se usar GitHub Actions para deploy por SSH/SCP, voce pode usar o usuario `nginx`, desde que o secret `PROJECT_PATH` aponte para a pasta de deploy correta. A role `web` tambem instala um sudoers restrito para permitir `sudo /usr/bin/systemctl` sem senha.
 3. Rode:
 
 ```bash
