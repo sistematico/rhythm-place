@@ -73,36 +73,60 @@ body {
 
 .starfield-near {
   background-image:
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.95) 0 1.2px,
-      transparent 1.9px
-    ),
-    radial-gradient(circle, rgba(191, 219, 254, 0.9) 0 1.4px, transparent 2.2px);
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle, rgba(191, 219, 254, 0.88) 0 1.4px, transparent 2.2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.82) 0 1px, transparent 1.7px),
+    radial-gradient(circle, rgba(224, 242, 254, 0.78) 0 1.3px, transparent 2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.91) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle, rgba(191, 219, 254, 0.72) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.86) 0 1.5px, transparent 2.3px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.68) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle, rgba(224, 242, 254, 0.9) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1px, transparent 1.6px);
   background-position:
-    0 0,
-    32px 56px;
-  background-size:
-    180px 180px,
-    240px 240px;
+    63px 127px,
+    198px 312px,
+    341px 54px,
+    89px 487px,
+    512px 231px,
+    274px 398px,
+    441px 574px,
+    627px 89px,
+    156px 623px,
+    578px 455px;
+  background-size: 680px 680px;
   animation-duration: 95s, 4.8s;
   opacity: 0.85;
 }
 
 .starfield-mid {
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.8px),
-    radial-gradient(
-      circle,
-      rgba(224, 231, 255, 0.65) 0 0.8px,
-      transparent 1.4px
-    );
+    radial-gradient(circle, rgba(255, 255, 255, 0.78) 0 1px, transparent 1.7px),
+    radial-gradient(circle, rgba(224, 231, 255, 0.65) 0 0.8px, transparent 1.4px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle, rgba(191, 219, 254, 0.6) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.68) 0 0.7px, transparent 1.2px),
+    radial-gradient(circle, rgba(224, 231, 255, 0.7) 0 1px, transparent 1.6px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1.1px, transparent 1.7px),
+    radial-gradient(circle, rgba(191, 219, 254, 0.55) 0 0.8px, transparent 1.3px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.75) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle, rgba(224, 231, 255, 0.58) 0 0.7px, transparent 1.1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.65) 0 1px, transparent 1.6px),
+    radial-gradient(circle, rgba(191, 219, 254, 0.62) 0 0.8px, transparent 1.4px);
   background-position:
-    24px 40px,
-    90px 120px;
-  background-size:
-    220px 220px,
-    300px 300px;
+    42px 203px,
+    183px 87px,
+    317px 441px,
+    489px 156px,
+    71px 528px,
+    234px 302px,
+    398px 68px,
+    561px 387px,
+    128px 619px,
+    445px 238px,
+    602px 512px,
+    289px 574px;
+  background-size: 650px 650px;
   animation-duration: 135s, 6.2s;
   animation-direction: reverse, alternate;
   opacity: 0.55;
@@ -110,22 +134,36 @@ body {
 
 .starfield-far {
   background-image:
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.55) 0 0.7px,
-      transparent 1.2px
-    ),
-    radial-gradient(
-      circle,
-      rgba(125, 211, 252, 0.35) 0 0.7px,
-      transparent 1.4px
-    );
+    radial-gradient(circle, rgba(255, 255, 255, 0.55) 0 0.7px, transparent 1.1px),
+    radial-gradient(circle, rgba(125, 211, 252, 0.35) 0 0.7px, transparent 1.2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.48) 0 0.6px, transparent 1px),
+    radial-gradient(circle, rgba(224, 242, 254, 0.4) 0 0.7px, transparent 1.1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.52) 0 0.5px, transparent 0.9px),
+    radial-gradient(circle, rgba(125, 211, 252, 0.3) 0 0.6px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.45) 0 0.7px, transparent 1.1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.58) 0 0.5px, transparent 0.9px),
+    radial-gradient(circle, rgba(125, 211, 252, 0.38) 0 0.6px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.42) 0 0.7px, transparent 1.2px),
+    radial-gradient(circle, rgba(224, 242, 254, 0.35) 0 0.5px, transparent 0.9px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.5) 0 0.6px, transparent 1px),
+    radial-gradient(circle, rgba(125, 211, 252, 0.32) 0 0.7px, transparent 1.1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.46) 0 0.5px, transparent 0.8px);
   background-position:
-    10px 18px,
-    120px 100px;
-  background-size:
-    140px 140px,
-    260px 260px;
+    27px 93px,
+    143px 47px,
+    261px 189px,
+    82px 334px,
+    392px 112px,
+    178px 421px,
+    468px 267px,
+    316px 503px,
+    54px 478px,
+    435px 389px,
+    219px 256px,
+    497px 147px,
+    103px 561px,
+    374px 534px;
+  background-size: 580px 580px;
   animation-duration: 170s, 7.4s;
   opacity: 0.35;
 }

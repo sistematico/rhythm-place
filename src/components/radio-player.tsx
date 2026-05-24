@@ -366,7 +366,7 @@ export function RadioPlayer() {
               onChange={(event) =>
                 handleVolumeChange(Number(event.target.value))
               }
-              className="h-1.5 w-28 cursor-pointer accent-sky-200"
+              className="h-1.5 w-28 cursor-pointer accent-sky-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:size-0 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:size-0"
               aria-label="Volume"
             />
           </label>
