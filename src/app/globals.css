@@ -5,6 +5,7 @@
   --space-core: #030712;
   --space-glow: #0f172a;
   --space-accent: #1d4ed8;
+  --font-sans: "Nunito", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html {
@@ -20,7 +21,7 @@ html {
 body {
   min-height: 100vh;
   background: transparent;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--fon), Georgia, "Times New Roman", serif;
 }
 
 .space-scene::before,
@@ -68,7 +69,6 @@ body {
   animation:
     drift linear infinite,
     shimmer ease-in-out infinite alternate;
-  will-change: transform, opacity;
 }
 
 .starfield-near {

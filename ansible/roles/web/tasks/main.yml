@@ -173,6 +173,14 @@
   register: web_git_checkout
   notify: Install JS dependencies with Bun
 
+- name: Ensure app root ownership matches runtime user
+  ansible.builtin.file:
+    path: "{{ app_root }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    recurse: true
+
 - name: Deploy systemd unit for Next.js
   ansible.builtin.template:
     src: rhythm-place.service.j2
@@ -180,6 +188,17 @@
     mode: "0644"
   notify:
     - Daemon reload
+    - Restart nextjs
+
+- name: Deploy application environment file
+  ansible.builtin.template:
+    src: rhythm-place.env.j2
+    dest: "{{ app_root }}/.env.production"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0640"
+  notify:
+    - Build Next.js app
     - Restart nextjs
 
 - name: Ensure certbot webroot exists
@@ -192,16 +211,41 @@
 
 - name: Configure Nginx reverse proxy site
   ansible.builtin.template:
-    src: nginx-rhythm-place.conf.j2
-    dest: /etc/nginx/sites-available/rhythm.place.conf
+    src: nginx-stream.rhythm.place.conf.j2
+    dest: /etc/nginx/sites-available/02-stream.rhythm.place.conf
     mode: "0644"
   notify: Reload nginx
 
-- name: Enable Nginx site
+- name: Configure primary Nginx app site
+  ansible.builtin.template:
+    src: nginx-rhythm.place.conf.j2
+    dest: /etc/nginx/sites-available/03-rhythm.place.conf
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable Nginx stream site
   ansible.builtin.file:
-    src: /etc/nginx/sites-available/rhythm.place.conf
-    dest: /etc/nginx/sites-enabled/rhythm.place.conf
+    src: /etc/nginx/sites-available/02-stream.rhythm.place.conf
+    dest: /etc/nginx/sites-enabled/02-stream.rhythm.place.conf
     state: link
+  notify: Reload nginx
+
+- name: Enable primary Nginx app site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/03-rhythm.place.conf
+    dest: /etc/nginx/sites-enabled/03-rhythm.place.conf
+    state: link
+  notify: Reload nginx
+
+- name: Remove legacy Nginx site files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/nginx/sites-available/rhythm.place.conf
+    - /etc/nginx/sites-enabled/rhythm.place.conf
+    - /etc/nginx/sites-available/stream.rhythm.place.conf
+    - /etc/nginx/sites-enabled/stream.rhythm.place.conf
   notify: Reload nginx
 
 - name: Disable default nginx site
@@ -217,6 +261,14 @@
     owner: root
     group: root
     mode: "0600"
+
+- name: Install Let's Encrypt deploy hook for Icecast and Nginx
+  ansible.builtin.template:
+    src: letsencrypt-deploy-hook.sh.j2
+    dest: /etc/letsencrypt/renewal-hooks/deploy/rhythm-place-cert-hook
+    owner: root
+    group: root
+    mode: "0750"
 
 - name: Issue/Renew wildcard certificate
   ansible.builtin.command: >-

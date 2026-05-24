@@ -10,6 +10,13 @@ Automacao de infraestrutura e deploy para o app Next.js (`next@latest`) com:
 - Certificados Let's Encrypt com wildcard (`rhythm.place`, `*.rhythm.place`)
 - Credenciais sensiveis protegidas com Ansible Vault
 
+## Tooling
+
+Este repositorio usa Bun como gerenciador de pacotes e task runner.
+
+- Use `bun install`, `bun add`, `bunx` e `bun run <script>`.
+- Evite `pnpm`, `npm` e `yarn` neste projeto.
+
 ## Estrutura criada
 
 - `ansible/site.yml`: playbook principal (host `ate`)
@@ -61,8 +68,10 @@ Arquivo: `ansible/group_vars/all/main.yml`
 
 ### Icecast2
 
-- `icecast_hostname`: hostname publico do Icecast (`rhythm.place`).
+- `icecast_hostname`: hostname publico do Icecast (`stream.rhythm.place`).
 - `icecast_port`: porta de escuta interna (padrao: `8000`).
+- `icecast_tls_port`: porta TLS interna usada pelo Nginx para proxy reverso (padrao: `8443`).
+- `icecast_tls_certificate_path`: arquivo PEM combinado lido pelo Icecast.
 - `icecast_max_clients`: limite de clientes simultaneos (padrao: `100`).
 - `icecast_max_sources`: limite de fontes simultaneas (padrao: `5`).
 
@@ -105,6 +114,13 @@ Com argumentos extras do Ansible:
 
 ```bash
 ./scripts/deploy.sh --limit ate --check
+```
+
+O deploy tambem gera `/var/www/rhythm.place/.env.production` no servidor com:
+
+```dotenv
+ICECAST_INTERNAL_BASE_URL=http://127.0.0.1:8000
+NEXT_PUBLIC_STREAM_URL=https://stream.rhythm.place/stream
 ```
 
 ## Stack Docker local
@@ -196,3 +212,4 @@ O Liquidsoap le a pasta automaticamente (modo randomize, reload a cada hora) e e
 - A unit systemd executa o Next.js com `bun --bun next start` e usuario `nginx`.
 - O Icecast2 escuta apenas em `127.0.0.1` (acesso externo via Nginx).
 - O certificado e emitido com `--cert-name rhythm.place`, resultando em `/etc/letsencrypt/live/rhythm.place/`.
+- O hook ` /etc/letsencrypt/renewal-hooks/deploy/rhythm-place-cert-hook` recria o PEM do Icecast com permissao `0640` e grupo `icecast` a cada emissao/renovacao.

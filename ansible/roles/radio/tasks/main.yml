@@ -8,27 +8,104 @@
     update_cache: true
     cache_valid_time: 3600
 
+- name: Ensure Icecast group exists
+  ansible.builtin.group:
+    name: icecast
+    system: true
+
+- name: Check whether Icecast user already exists
+  ansible.builtin.getent:
+    database: passwd
+    key: icecast2
+
+- name: Ensure Icecast user exists when package did not create it
+  ansible.builtin.user:
+    name: icecast2
+    group: icecast
+    create_home: false
+    home: /var/lib/icecast2
+    shell: /usr/sbin/nologin
+    system: true
+  when: ansible_facts.getent_passwd.icecast2 is not defined
+
+- name: Ensure Liquidsoap group exists
+  ansible.builtin.group:
+    name: liquidsoap
+    system: true
+
+- name: Check whether Liquidsoap user already exists
+  ansible.builtin.getent:
+    database: passwd
+    key: liquidsoap
+
+- name: Ensure Liquidsoap user exists for service and rsync access when package did not create it
+  ansible.builtin.user:
+    name: liquidsoap
+    group: liquidsoap
+    create_home: true
+    home: /home/liquidsoap
+    shell: /bin/bash
+    system: true
+  when: ansible_facts.getent_passwd.liquidsoap is not defined
+
+- name: Ensure Liquidsoap home directory exists for rsync access
+  ansible.builtin.file:
+    path: /home/liquidsoap
+    state: directory
+    owner: liquidsoap
+    group: liquidsoap
+    mode: "0755"
+
 - name: Configure Icecast2
   ansible.builtin.template:
-    src: icecast.xml.j2
-    dest: /etc/icecast2/icecast.xml
+    src: rhythm.xml.j2
+    dest: /etc/icecast2/rhythm.xml
     owner: root
     group: icecast
     mode: "0640"
-  notify: Restart icecast2
+  notify: Restart rhythm icecast2
 
-- name: Enable Icecast2 in /etc/default/icecast2
-  ansible.builtin.lineinfile:
-    path: /etc/default/icecast2
-    regexp: '^ENABLE='
-    line: 'ENABLE=true'
-  notify: Restart icecast2
+- name: Deploy Icecast2 systemd unit
+  ansible.builtin.template:
+    src: rhythm-icecast2.service.j2
+    dest: /etc/systemd/system/rhythm-icecast2.service
+    mode: "0644"
+  notify:
+    - Daemon reload
+    - Restart rhythm icecast2
 
-- name: Ensure Icecast2 is enabled and running
+- name: Check if Let's Encrypt certificate exists for Icecast TLS bundle
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/live/{{ letsencrypt_cert_name }}/fullchain.pem"
+  register: radio_icecast_letsencrypt_certificate
+
+- name: Refresh Icecast TLS bundle from current Let's Encrypt certificate
+  ansible.builtin.command: /etc/letsencrypt/renewal-hooks/deploy/rhythm-place-cert-hook
+  when: radio_icecast_letsencrypt_certificate.stat.exists
+  changed_when: false
+
+- name: Stop and disable legacy Icecast2 service
   ansible.builtin.systemd:
     name: icecast2
+    enabled: false
+    state: stopped
+
+- name: Remove legacy Icecast2 config
+  ansible.builtin.file:
+    path: /etc/icecast2/icecast.xml
+    state: absent
+
+- name: Remove legacy Icecast2 systemd unit override
+  ansible.builtin.file:
+    path: /etc/systemd/system/icecast2.service
+    state: absent
+
+- name: Ensure rhythm Icecast2 service is enabled and running
+  ansible.builtin.systemd:
+    name: rhythm-icecast2
     enabled: true
     state: started
+    daemon_reload: true
 
 - name: Ensure Liquidsoap config directory exists
   ansible.builtin.file:
@@ -38,6 +115,14 @@
     group: liquidsoap
     mode: "0750"
 
+- name: Ensure music base directory exists
+  ansible.builtin.file:
+    path: /var/music
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
 - name: Ensure Liquidsoap playlist directory exists
   ansible.builtin.file:
     path: "{{ liquidsoap_playlist_dir }}"
@@ -45,6 +130,7 @@
     owner: liquidsoap
     group: liquidsoap
     mode: "0755"
+    recurse: true
 
 - name: Ensure Liquidsoap log directory exists
   ansible.builtin.file:
@@ -56,27 +142,46 @@
 
 - name: Deploy Liquidsoap stream script
   ansible.builtin.template:
-    src: liquidsoap-rhythm-place.liq.j2
-    dest: /etc/liquidsoap/rhythm-place.liq
+    src: rhythm.liq.j2
+    dest: /etc/liquidsoap/rhythm.liq
     owner: root
     group: liquidsoap
     mode: "0640"
-  notify: Restart liquidsoap
+  notify: Restart rhythm liquidsoap
 
 - name: Deploy Liquidsoap systemd unit
   ansible.builtin.template:
-    src: liquidsoap.service.j2
-    dest: /etc/systemd/system/liquidsoap-rhythm-place.service
+    src: rhythm-liquidsoap.service.j2
+    dest: /etc/systemd/system/rhythm-liquidsoap.service
     mode: "0644"
   notify:
     - Daemon reload
-    - Restart liquidsoap
+    - Restart rhythm liquidsoap
 
-- name: Ensure Liquidsoap service is enabled and running
+- name: Stop and disable legacy Liquidsoap service
   ansible.builtin.systemd:
     name: liquidsoap-rhythm-place
+    enabled: false
+    state: stopped
+    daemon_reload: true
+  failed_when: false
+
+- name: Remove legacy Liquidsoap config
+  ansible.builtin.file:
+    path: /etc/liquidsoap/rhythm-place.liq
+    state: absent
+
+- name: Remove legacy Liquidsoap systemd unit
+  ansible.builtin.file:
+    path: /etc/systemd/system/liquidsoap-rhythm-place.service
+    state: absent
+
+- name: Ensure rhythm Liquidsoap service is enabled and running
+  ansible.builtin.systemd:
+    name: rhythm-liquidsoap
     enabled: true
     state: started
+    daemon_reload: true
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

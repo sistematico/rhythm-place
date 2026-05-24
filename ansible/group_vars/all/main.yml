@@ -21,8 +21,10 @@ letsencrypt_domains:
 letsencrypt_cert_name: rhythm.place
 
 # ─── Icecast2 ──────────────────────────────────────────────────────────────────
-icecast_hostname: "{{ app_domain }}"
+icecast_hostname: stream.rhythm.place
 icecast_port: 8000
+icecast_tls_port: 8443
+icecast_tls_certificate_path: /etc/icecast2/tls/rhythm.place.pem
 icecast_max_clients: 100
 icecast_max_sources: 5
 icecast_location: Earth
@@ -30,4 +32,4 @@ icecast_admin_email: "{{ letsencrypt_email }}"
 
 # ─── Liquidsoap ────────────────────────────────────────────────────────────────
 liquidsoap_mount: /stream
-liquidsoap_playlist_dir: /var/lib/liquidsoap/playlists
+liquidsoap_playlist_dir: /var/music/rtm

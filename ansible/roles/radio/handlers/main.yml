@@ -3,12 +3,14 @@
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: Restart icecast2
+- name: Restart rhythm icecast2
   ansible.builtin.systemd:
-    name: icecast2
+    name: rhythm-icecast2
     state: restarted
+    daemon_reload: true
 
-- name: Restart liquidsoap
+- name: Restart rhythm liquidsoap
   ansible.builtin.systemd:
-    name: liquidsoap-rhythm-place
+    name: rhythm-liquidsoap
     state: restarted
+    daemon_reload: true

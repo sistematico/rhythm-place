@@ -1,14 +1,14 @@
 [Unit]
 Description=Liquidsoap streaming server (rhythm.place)
 Documentation=https://www.liquidsoap.info/
-After=network.target icecast2.service
-Requires=icecast2.service
+After=network.target rhythm-icecast2.service
+Requires=rhythm-icecast2.service
 
 [Service]
 Type=simple
 User=liquidsoap
 Group=liquidsoap
-ExecStart=/usr/bin/liquidsoap /etc/liquidsoap/rhythm-place.liq
+ExecStart=/usr/bin/liquidsoap /etc/liquidsoap/rhythm.liq
 Restart=on-failure
 RestartSec=10
 StandardOutput=journal

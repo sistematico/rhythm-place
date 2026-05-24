@@ -8,6 +8,7 @@ Type=simple
 User={{ app_user }}
 Group={{ app_group }}
 WorkingDirectory={{ app_root }}
+EnvironmentFile={{ app_root }}/.env.production
 Environment=NODE_ENV=production
 Environment=PORT={{ app_port }}
 ExecStart=/home/nginx/.bun/bin/bun --bun next start --port {{ app_port }}

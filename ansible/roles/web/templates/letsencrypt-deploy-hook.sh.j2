@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+
+cert_dir="/etc/letsencrypt/live/{{ letsencrypt_cert_name }}"
+target_file="{{ icecast_tls_certificate_path }}"
+target_dir="$(dirname "$target_file")"
+tmp_file="${target_file}.tmp"
+
+install -d -o root -g icecast -m 0750 "$target_dir"
+umask 027
+cat "$cert_dir/fullchain.pem" "$cert_dir/privkey.pem" > "$tmp_file"
+chown root:icecast "$tmp_file"
+chmod 0640 "$tmp_file"
+mv "$tmp_file" "$target_file"
+
+if systemctl is-active --quiet nginx; then
+  systemctl reload nginx
+fi
+
+if systemctl is-active --quiet rhythm-icecast2; then
+  systemctl restart rhythm-icecast2
+fi
