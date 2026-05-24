@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 NAME="rhythm-place"
-TMPDIR="/tmp/$NAME"
-WORKDIR="/var/www/$NAME"
+TMPDIR="/tmp/rhythm.place"
+WORKDIR="/var/www/rhythm.place"
 SERVICE="${NAME}.service"
 PATH=$PATH:/home/nginx/.bun/bin
 
@@ -14,7 +14,7 @@ cd $TMPDIR || exit 1
 
 # 🔄 ⚠️ ❌ ✅ 🗃️ 📤 🚀
 
-#git clean -fxd -e .env -e drizzle/privatehub.db -e public/uploads/ -e models/
+#git clean -fxd -e .env -e drizzle/rhythm.db -e public/uploads/ -e models/
 git clean -fxd 
 #cp .env .env.production
 
