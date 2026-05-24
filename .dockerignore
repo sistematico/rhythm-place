@@ -1,0 +1,10 @@
+.git
+.github
+.next
+.env
+.env.*
+!.env.docker.example
+node_modules
+playlists
+ansible
+README.md

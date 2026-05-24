@@ -2,7 +2,13 @@ FROM oven/bun:1-alpine
 
 WORKDIR /app
 
-COPY package.json ./
-RUN bun install
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
-CMD ["bun", "--bun", "next", "dev", "-p", "3030"]
+COPY . .
+
+RUN bun run build
+
+EXPOSE 3030
+
+CMD ["bun", "run", "start"]

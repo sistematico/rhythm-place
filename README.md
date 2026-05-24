@@ -20,6 +20,7 @@ Automacao de infraestrutura e deploy para o app Next.js (`next@latest`) com:
 - `scripts/ansible-vault-init.sh`: inicializa vault local
 - `scripts/ansible-provision.sh`: roda `ansible-playbook`
 - `scripts/deploy.sh`: atalho de deploy
+- `scripts/docker-stack.sh`: sobe a stack Docker local espelhando a VPS
 
 ## O que as roles configuram
 
@@ -105,6 +106,59 @@ Com argumentos extras do Ansible:
 ```bash
 ./scripts/deploy.sh --limit ate --check
 ```
+
+## Stack Docker local
+
+Para mimetizar a infraestrutura da VPS localmente, a stack Docker sobe os mesmos blocos principais:
+
+- Next.js rodando com Bun em modo buildado (`bun run build` + `bun run start`)
+- Nginx como proxy reverso na porta `80`
+- Icecast2 exposto via Nginx na porta `8000`
+- Liquidsoap lendo sua biblioteca local e publicando no Icecast
+
+### Preparacao
+
+1. Copie o arquivo de exemplo:
+
+```bash
+cp .env.docker.example .env.docker
+```
+
+2. Edite `MUSIC_DIR` em `.env.docker` com o caminho absoluto da sua pasta de musicas.
+3. Ajuste as senhas do Icecast em `.env.docker`.
+
+### Subir a stack
+
+```bash
+./scripts/docker-stack.sh up
+```
+
+O script faz duas coisas antes de subir os containers:
+
+- valida `MUSIC_DIR`
+- recria `./playlists/` com links simbolicos para os arquivos encontrados em sua biblioteca, que e o formato esperado pelo Liquidsoap nesta stack local
+
+### Comandos uteis
+
+```bash
+./scripts/docker-stack.sh playlist
+./scripts/docker-stack.sh ps
+./scripts/docker-stack.sh logs
+./scripts/docker-stack.sh logs liquidsoap
+./scripts/docker-stack.sh down
+```
+
+### Endpoints locais
+
+- Site: `http://localhost`
+- Icecast admin/publico via proxy: `http://localhost:8000`
+- Stream: `http://localhost:8000/stream`
+
+### Observacoes da stack local
+
+- O volume da biblioteca e montado como somente leitura em `/music` dentro do container do Liquidsoap.
+- A playlist local e gerada em `./playlists/` e ignorada pelo Git.
+- Se voce adicionar ou remover faixas da sua biblioteca, rode `./scripts/docker-stack.sh playlist` ou `./scripts/docker-stack.sh restart`.
 
 ## Operacao no servidor
 

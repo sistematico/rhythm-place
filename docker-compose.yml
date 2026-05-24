@@ -3,17 +3,13 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
-    volumes:
-      - .:/app
-      - app_node_modules:/app/node_modules
-      - app_next:/app/.next
+    restart: unless-stopped
     networks:
       - rhythm
-    depends_on:
-      - icecast
 
   nginx:
     image: nginx:alpine
+    restart: unless-stopped
     ports:
       - "80:80"
       - "8000:8000"
@@ -28,25 +24,28 @@ services:
   icecast:
     build:
       context: docker/icecast
-    env_file: .env.docker
+    environment:
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_SOURCE_PASSWORD:-source_password}
+      ICECAST_RELAY_PASSWORD: ${ICECAST_RELAY_PASSWORD:-relay_password}
+      ICECAST_ADMIN_PASSWORD: ${ICECAST_ADMIN_PASSWORD:-admin_password}
+    restart: unless-stopped
     networks:
       - rhythm
 
   liquidsoap:
     build:
       context: docker/liquidsoap
-    env_file: .env.docker
+    environment:
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_SOURCE_PASSWORD:-source_password}
+    restart: unless-stopped
     volumes:
       - ./docker/liquidsoap/rhythm-place.liq:/etc/liquidsoap/rhythm-place.liq:ro
       - ./playlists:/var/lib/liquidsoap/playlists:ro
+      - ${MUSIC_DIR:-./music}:/music:ro
     depends_on:
       - icecast
     networks:
       - rhythm
-
-volumes:
-  app_node_modules:
-  app_next:
 
 networks:
   rhythm:
