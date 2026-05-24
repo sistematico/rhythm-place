@@ -15,12 +15,9 @@ function buildStreamUrl(timestamp: number) {
 }
 
 async function checkStreamAvailability(timestamp: number) {
-  const response = await fetch(
-    `${STREAM_HEALTH_ENDPOINT}?ts=${timestamp}`,
-    {
-      cache: "no-store",
-    },
-  );
+  const response = await fetch(`${STREAM_HEALTH_ENDPOINT}?ts=${timestamp}`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     return false;
@@ -312,10 +309,7 @@ export function RadioPlayer() {
               {isMetadataLoading ? "Carregando metadados..." : currentArtist}
             </p>
             {streamError ? (
-              <output
-                className="text-sm text-amber-200/95"
-                aria-live="polite"
-              >
+              <output className="text-sm text-amber-200/95" aria-live="polite">
                 {streamError}
               </output>
             ) : null}

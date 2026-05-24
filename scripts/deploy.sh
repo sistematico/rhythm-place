@@ -16,7 +16,8 @@ cd $TMPDIR || exit 1
 
 #git clean -fxd -e .env -e drizzle/rhythm.db -e public/uploads/ -e models/
 git clean -fxd 
-#cp .env .env.production
+cp .env.example .env.production
+cp .env.example .env
 
 echo "📥 Instalando dependências..."
 bun install

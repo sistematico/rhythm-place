@@ -5,7 +5,7 @@ import "./globals.css";
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
-  preload: false
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -37,7 +37,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${nunito.variable} bg-black text-white`}>
       <head>
-        <link rel="icon" href="/images/logo.svg" type="image/svg+xml" sizes="any" />
+        <link
+          rel="icon"
+          href="/images/logo.svg"
+          type="image/svg+xml"
+          sizes="any"
+        />
       </head>
       <body>{children}</body>
     </html>
