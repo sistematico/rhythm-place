@@ -298,9 +298,6 @@ export function RadioPlayer() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-sky-100/70">
-            Live radio
-          </p>
           <div className="mt-2 min-w-0 space-y-1">
             <p className="truncate text-lg font-semibold text-white sm:text-xl">
               {currentTrack}
