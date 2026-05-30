@@ -1,5 +1,6 @@
 ---
 app_name: rhythm-place
+app_slogan: "A sua música, no seu rítmo"
 app_domain: rhythm.place
 app_user: nginx
 app_group: nginx
@@ -31,5 +32,5 @@ icecast_location: Earth
 icecast_admin_email: "{{ letsencrypt_email }}"
 
 # ─── Liquidsoap ────────────────────────────────────────────────────────────────
-liquidsoap_mount: /stream
+liquidsoap_mount: /main
 liquidsoap_playlist_dir: /var/music/rtm

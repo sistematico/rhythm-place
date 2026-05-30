@@ -1,6 +1,8 @@
 import { Nunito } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
+import { NavMenu } from "@/components/nav-menu";
+import { RadioPlayerProvider } from "@/contexts/radio-player";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -44,7 +46,12 @@ export default function RootLayout({
           sizes="any"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <RadioPlayerProvider>
+          <NavMenu />
+          {children}
+        </RadioPlayerProvider>
+      </body>
     </html>
   );
 }

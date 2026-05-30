@@ -4,13 +4,13 @@ import { SpaceEffects } from "@/components/space-effects";
 
 export default function Home() {
   return (
-    <main className="space-scene relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-10 text-white">
+    <main className="space-scene relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-10 text-white">
       <div className="starfield starfield-near" aria-hidden="true" />
       <div className="starfield starfield-mid" aria-hidden="true" />
       <div className="starfield starfield-far" aria-hidden="true" />
       <SpaceEffects />
 
-      <div className="relative z-10 flex w-full max-w-4xl items-center justify-center">
+      <div className="relative z-10 flex w-full max-w-4xl flex-1 items-center justify-center">
         <div className="w-full rounded-[2rem] border border-white/12 bg-white/8 px-6 py-8 text-center shadow-[0_30px_100px_rgba(2,6,23,0.55)] backdrop-blur-xl sm:px-10 sm:py-10">
           <div className="mx-auto flex w-fit items-center justify-center rounded-full border border-white/15 bg-white/10 p-5 shadow-[0_0_60px_rgba(148,163,184,0.18)]">
             <Image
@@ -30,6 +30,20 @@ export default function Home() {
           <div className="mt-8">
             <RadioPlayer />
           </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-4 pb-2">
+        <div className="group relative cursor-default select-none text-xs text-white/25 transition-colors hover:text-white/50">
+          {process.env.NEXT_PUBLIC_BUILD_VERSION}
+          <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-black/70 px-2 py-1 text-white/70 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+            {process.env.NEXT_PUBLIC_BUILD_DATE
+              ? new Date(process.env.NEXT_PUBLIC_BUILD_DATE).toLocaleString("pt-BR", {
+                  dateStyle: "long",
+                  timeStyle: "short",
+                })
+              : ""}
+          </span>
         </div>
       </div>
     </main>
