@@ -45,10 +45,10 @@ export function SpaceEffects() {
       // Start off the right edge, travel toward lower-left, exit off left/bottom
       const star: ShootingStarData = {
         id: nextId(),
-        x: rand(95, 125),   // vw — off right edge
-        y: rand(-8, 28),    // vh — upper portion
+        x: rand(95, 125), // vw — off right edge
+        y: rand(-8, 28), // vh — upper portion
         angle: rand(148, 168), // rotated so head points lower-left
-        dist: rand(150, 175),  // vw — always crosses full screen
+        dist: rand(150, 175), // vw — always crosses full screen
         length: rand(110, 210),
         duration,
       };
@@ -74,7 +74,16 @@ export function SpaceEffects() {
       const duration = rand(38000, 62000);
       const bodyAngle = fromLeft ? rand(-6, 7) : rand(82, 96);
       const variant: 1 | 2 = Math.random() > 0.5 ? 1 : 2;
-      const sat: SatelliteData = { id: nextId(), x, y, dx, dy, bodyAngle, duration, variant };
+      const sat: SatelliteData = {
+        id: nextId(),
+        x,
+        y,
+        dx,
+        dy,
+        bodyAngle,
+        duration,
+        variant,
+      };
 
       setSatellites((prev) => [...prev, sat]);
 
@@ -97,7 +106,10 @@ export function SpaceEffects() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
+    >
       {stars.map((star) => (
         <ShootingStar key={star.id} data={star} />
       ))}
@@ -148,7 +160,12 @@ function Satellite({ data }: { data: SatelliteData }) {
         } as React.CSSProperties
       }
     >
-      <div style={{ transform: `rotate(${data.bodyAngle}deg)`, position: "relative" }}>
+      <div
+        style={{
+          transform: `rotate(${data.bodyAngle}deg)`,
+          position: "relative",
+        }}
+      >
         {data.variant === 1 ? <SatelliteSvgA /> : <SatelliteSvgB />}
         {data.variant === 1 ? <SignalRings /> : <DishPulse />}
       </div>
@@ -169,23 +186,113 @@ function SatelliteSvgA() {
       style={{ display: "block" }}
     >
       {/* Left solar panel */}
-      <rect x="1" y="7" width="12" height="6" rx="1" fill="#7dd3fc" fillOpacity="0.52" stroke="#bae6fd" strokeWidth="0.6" />
-      <line x1="5" y1="7" x2="5" y2="13" stroke="rgba(0,0,0,0.22)" strokeWidth="0.4" />
-      <line x1="9" y1="7" x2="9" y2="13" stroke="rgba(0,0,0,0.22)" strokeWidth="0.4" />
+      <rect
+        x="1"
+        y="7"
+        width="12"
+        height="6"
+        rx="1"
+        fill="#7dd3fc"
+        fillOpacity="0.52"
+        stroke="#bae6fd"
+        strokeWidth="0.6"
+      />
+      <line
+        x1="5"
+        y1="7"
+        x2="5"
+        y2="13"
+        stroke="rgba(0,0,0,0.22)"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="9"
+        y1="7"
+        x2="9"
+        y2="13"
+        stroke="rgba(0,0,0,0.22)"
+        strokeWidth="0.4"
+      />
       {/* Left strut */}
-      <rect x="13" y="9.25" width="3.5" height="1.5" rx="0.4" fill="#e0f2fe" fillOpacity="0.68" />
+      <rect
+        x="13"
+        y="9.25"
+        width="3.5"
+        height="1.5"
+        rx="0.4"
+        fill="#e0f2fe"
+        fillOpacity="0.68"
+      />
       {/* Body */}
-      <rect x="16.5" y="5.5" width="11" height="9" rx="1.5" fill="#e2e8f0" fillOpacity="0.80" stroke="#f0f9ff" strokeWidth="0.6" />
+      <rect
+        x="16.5"
+        y="5.5"
+        width="11"
+        height="9"
+        rx="1.5"
+        fill="#e2e8f0"
+        fillOpacity="0.80"
+        stroke="#f0f9ff"
+        strokeWidth="0.6"
+      />
       {/* Body panel detail */}
-      <rect x="18.5" y="7.5" width="7" height="5" rx="0.5" fill="#60a5fa" fillOpacity="0.26" />
+      <rect
+        x="18.5"
+        y="7.5"
+        width="7"
+        height="5"
+        rx="0.5"
+        fill="#60a5fa"
+        fillOpacity="0.26"
+      />
       {/* Right strut */}
-      <rect x="27.5" y="9.25" width="3.5" height="1.5" rx="0.4" fill="#e0f2fe" fillOpacity="0.68" />
+      <rect
+        x="27.5"
+        y="9.25"
+        width="3.5"
+        height="1.5"
+        rx="0.4"
+        fill="#e0f2fe"
+        fillOpacity="0.68"
+      />
       {/* Right solar panel */}
-      <rect x="31" y="7" width="12" height="6" rx="1" fill="#7dd3fc" fillOpacity="0.52" stroke="#bae6fd" strokeWidth="0.6" />
-      <line x1="35" y1="7" x2="35" y2="13" stroke="rgba(0,0,0,0.22)" strokeWidth="0.4" />
-      <line x1="39" y1="7" x2="39" y2="13" stroke="rgba(0,0,0,0.22)" strokeWidth="0.4" />
+      <rect
+        x="31"
+        y="7"
+        width="12"
+        height="6"
+        rx="1"
+        fill="#7dd3fc"
+        fillOpacity="0.52"
+        stroke="#bae6fd"
+        strokeWidth="0.6"
+      />
+      <line
+        x1="35"
+        y1="7"
+        x2="35"
+        y2="13"
+        stroke="rgba(0,0,0,0.22)"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="39"
+        y1="7"
+        x2="39"
+        y2="13"
+        stroke="rgba(0,0,0,0.22)"
+        strokeWidth="0.4"
+      />
       {/* Antenna */}
-      <line x1="22" y1="5.5" x2="22" y2="2.5" stroke="#bae6fd" strokeWidth="0.7" strokeOpacity="0.88" />
+      <line
+        x1="22"
+        y1="5.5"
+        x2="22"
+        y2="2.5"
+        stroke="#bae6fd"
+        strokeWidth="0.7"
+        strokeOpacity="0.88"
+      />
       <circle cx="22" cy="1.5" r="1.3" fill="#7dd3fc" fillOpacity="0.88" />
     </svg>
   );
@@ -234,18 +341,91 @@ function SatelliteSvgB() {
       style={{ display: "block" }}
     >
       {/* Single wide solar panel — left */}
-      <rect x="0" y="13" width="14" height="8" rx="1" fill="#fcd34d" fillOpacity="0.42" stroke="#fde68a" strokeWidth="0.5" />
-      <line x1="3.5" y1="13" x2="3.5" y2="21" stroke="rgba(0,0,0,0.18)" strokeWidth="0.4" />
-      <line x1="7"   y1="13" x2="7"   y2="21" stroke="rgba(0,0,0,0.18)" strokeWidth="0.4" />
-      <line x1="10.5" y1="13" x2="10.5" y2="21" stroke="rgba(0,0,0,0.18)" strokeWidth="0.4" />
+      <rect
+        x="0"
+        y="13"
+        width="14"
+        height="8"
+        rx="1"
+        fill="#fcd34d"
+        fillOpacity="0.42"
+        stroke="#fde68a"
+        strokeWidth="0.5"
+      />
+      <line
+        x1="3.5"
+        y1="13"
+        x2="3.5"
+        y2="21"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="7"
+        y1="13"
+        x2="7"
+        y2="21"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.4"
+      />
+      <line
+        x1="10.5"
+        y1="13"
+        x2="10.5"
+        y2="21"
+        stroke="rgba(0,0,0,0.18)"
+        strokeWidth="0.4"
+      />
       {/* Strut */}
-      <rect x="14" y="16" width="3" height="2" rx="0.4" fill="#e0f2fe" fillOpacity="0.6" />
+      <rect
+        x="14"
+        y="16"
+        width="3"
+        height="2"
+        rx="0.4"
+        fill="#e0f2fe"
+        fillOpacity="0.6"
+      />
       {/* Body — hexagonal feel via clipped rect */}
-      <rect x="17" y="11" width="10" height="12" rx="2" fill="#cbd5e1" fillOpacity="0.78" stroke="#f1f5f9" strokeWidth="0.5" />
-      <rect x="18.5" y="12.5" width="7" height="4" rx="0.5" fill="#f59e0b" fillOpacity="0.22" />
-      <rect x="18.5" y="17.5" width="7" height="2.5" rx="0.5" fill="#60a5fa" fillOpacity="0.22" />
+      <rect
+        x="17"
+        y="11"
+        width="10"
+        height="12"
+        rx="2"
+        fill="#cbd5e1"
+        fillOpacity="0.78"
+        stroke="#f1f5f9"
+        strokeWidth="0.5"
+      />
+      <rect
+        x="18.5"
+        y="12.5"
+        width="7"
+        height="4"
+        rx="0.5"
+        fill="#f59e0b"
+        fillOpacity="0.22"
+      />
+      <rect
+        x="18.5"
+        y="17.5"
+        width="7"
+        height="2.5"
+        rx="0.5"
+        fill="#60a5fa"
+        fillOpacity="0.22"
+      />
       {/* Right stub — no panel */}
-      <rect x="27" y="16" width="4" height="2" rx="0.8" fill="#94a3b8" fillOpacity="0.55" />
+      <rect
+        x="27"
+        y="16"
+        width="4"
+        height="2"
+        rx="0.8"
+        fill="#94a3b8"
+        fillOpacity="0.55"
+      />
       {/* Parabolic dish — arc pointing up-right */}
       <path
         d="M19 11 Q22 4.5 28 6"
@@ -255,7 +435,15 @@ function SatelliteSvgB() {
         fill="none"
       />
       {/* Dish feed arm */}
-      <line x1="22" y1="11" x2="24.5" y2="6.5" stroke="#fde68a" strokeWidth="0.5" strokeOpacity="0.7" />
+      <line
+        x1="22"
+        y1="11"
+        x2="24.5"
+        y2="6.5"
+        stroke="#fde68a"
+        strokeWidth="0.5"
+        strokeOpacity="0.7"
+      />
       {/* Feed point */}
       <circle cx="24.5" cy="6.5" r="1.1" fill="#fcd34d" fillOpacity="0.9" />
     </svg>

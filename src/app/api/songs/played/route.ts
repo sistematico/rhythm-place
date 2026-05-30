@@ -33,7 +33,10 @@ export async function POST(request: Request) {
     body === null ||
     typeof (body as Record<string, unknown>).path !== "string"
   ) {
-    return Response.json({ error: "Missing required field: path" }, { status: 400 });
+    return Response.json(
+      { error: "Missing required field: path" },
+      { status: 400 },
+    );
   }
 
   const path = (body as { path: string }).path;

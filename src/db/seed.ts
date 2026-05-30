@@ -4,7 +4,15 @@ import { join } from "node:path";
 import { songsTable } from "./schema";
 import { db } from "./index";
 
-const AUDIO_EXTENSIONS = new Set([".mp3", ".flac", ".ogg", ".wav", ".aac", ".m4a", ".opus"]);
+const AUDIO_EXTENSIONS = new Set([
+  ".mp3",
+  ".flac",
+  ".ogg",
+  ".wav",
+  ".aac",
+  ".m4a",
+  ".opus",
+]);
 
 function parseTitleFromPath(filePath: string): string {
   const name = filePath.slice(filePath.lastIndexOf("/") + 1);
@@ -13,7 +21,8 @@ function parseTitleFromPath(filePath: string): string {
 
 async function main() {
   const songsPath = process.env.SONGS_PATH;
-  if (!songsPath) throw new Error("SONGS_PATH environment variable is not set.");
+  if (!songsPath)
+    throw new Error("SONGS_PATH environment variable is not set.");
 
   console.log(`Scanning ${songsPath}...`);
   const entries = await readdir(songsPath, { recursive: true });
@@ -28,10 +37,13 @@ async function main() {
   console.log(`Found ${files.length} audio file(s).`);
   if (files.length === 0) return;
 
-  const rows = files.map((path) => ({
-    path,
-    title: parseTitleFromPath(path),
-  } satisfies typeof songsTable.$inferInsert));
+  const rows = files.map(
+    (path) =>
+      ({
+        path,
+        title: parseTitleFromPath(path),
+      }) satisfies typeof songsTable.$inferInsert,
+  );
 
   const inserted = await db
     .insert(songsTable)
@@ -39,7 +51,9 @@ async function main() {
     .onConflictDoNothing()
     .returning({ id: songsTable.id });
 
-  console.log(`Done. Inserted ${inserted.length} new song(s), skipped ${files.length - inserted.length} duplicate(s).`);
+  console.log(
+    `Done. Inserted ${inserted.length} new song(s), skipped ${files.length - inserted.length} duplicate(s).`,
+  );
 }
 
 main();

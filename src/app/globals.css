@@ -73,14 +73,38 @@ body {
 
 .starfield-near {
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1.2px, transparent 1.9px),
-    radial-gradient(circle, rgba(191, 219, 254, 0.88) 0 1.4px, transparent 2.2px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.95) 0 1.2px,
+      transparent 1.9px
+    ),
+    radial-gradient(
+      circle,
+      rgba(191, 219, 254, 0.88) 0 1.4px,
+      transparent 2.2px
+    ),
     radial-gradient(circle, rgba(255, 255, 255, 0.82) 0 1px, transparent 1.7px),
     radial-gradient(circle, rgba(224, 242, 254, 0.78) 0 1.3px, transparent 2px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.91) 0 0.9px, transparent 1.5px),
-    radial-gradient(circle, rgba(191, 219, 254, 0.72) 0 1.1px, transparent 1.8px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.86) 0 1.5px, transparent 2.3px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.68) 0 0.8px, transparent 1.4px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.91) 0 0.9px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(191, 219, 254, 0.72) 0 1.1px,
+      transparent 1.8px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.86) 0 1.5px,
+      transparent 2.3px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.68) 0 0.8px,
+      transparent 1.4px
+    ),
     radial-gradient(circle, rgba(224, 242, 254, 0.9) 0 1.2px, transparent 1.9px),
     radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1px, transparent 1.6px);
   background-position:
@@ -102,17 +126,49 @@ body {
 .starfield-mid {
   background-image:
     radial-gradient(circle, rgba(255, 255, 255, 0.78) 0 1px, transparent 1.7px),
-    radial-gradient(circle, rgba(224, 231, 255, 0.65) 0 0.8px, transparent 1.4px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1.1px, transparent 1.8px),
+    radial-gradient(
+      circle,
+      rgba(224, 231, 255, 0.65) 0 0.8px,
+      transparent 1.4px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.72) 0 1.1px,
+      transparent 1.8px
+    ),
     radial-gradient(circle, rgba(191, 219, 254, 0.6) 0 0.9px, transparent 1.5px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.68) 0 0.7px, transparent 1.2px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.68) 0 0.7px,
+      transparent 1.2px
+    ),
     radial-gradient(circle, rgba(224, 231, 255, 0.7) 0 1px, transparent 1.6px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1.1px, transparent 1.7px),
-    radial-gradient(circle, rgba(191, 219, 254, 0.55) 0 0.8px, transparent 1.3px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.75) 0 0.9px, transparent 1.5px),
-    radial-gradient(circle, rgba(224, 231, 255, 0.58) 0 0.7px, transparent 1.1px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.62) 0 1.1px,
+      transparent 1.7px
+    ),
+    radial-gradient(
+      circle,
+      rgba(191, 219, 254, 0.55) 0 0.8px,
+      transparent 1.3px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.75) 0 0.9px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      circle,
+      rgba(224, 231, 255, 0.58) 0 0.7px,
+      transparent 1.1px
+    ),
     radial-gradient(circle, rgba(255, 255, 255, 0.65) 0 1px, transparent 1.6px),
-    radial-gradient(circle, rgba(191, 219, 254, 0.62) 0 0.8px, transparent 1.4px);
+    radial-gradient(
+      circle,
+      rgba(191, 219, 254, 0.62) 0 0.8px,
+      transparent 1.4px
+    );
   background-position:
     42px 203px,
     183px 87px,
@@ -134,20 +190,56 @@ body {
 
 .starfield-far {
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.55) 0 0.7px, transparent 1.1px),
-    radial-gradient(circle, rgba(125, 211, 252, 0.35) 0 0.7px, transparent 1.2px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.55) 0 0.7px,
+      transparent 1.1px
+    ),
+    radial-gradient(
+      circle,
+      rgba(125, 211, 252, 0.35) 0 0.7px,
+      transparent 1.2px
+    ),
     radial-gradient(circle, rgba(255, 255, 255, 0.48) 0 0.6px, transparent 1px),
     radial-gradient(circle, rgba(224, 242, 254, 0.4) 0 0.7px, transparent 1.1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.52) 0 0.5px, transparent 0.9px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.52) 0 0.5px,
+      transparent 0.9px
+    ),
     radial-gradient(circle, rgba(125, 211, 252, 0.3) 0 0.6px, transparent 1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.45) 0 0.7px, transparent 1.1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.58) 0 0.5px, transparent 0.9px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.45) 0 0.7px,
+      transparent 1.1px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.58) 0 0.5px,
+      transparent 0.9px
+    ),
     radial-gradient(circle, rgba(125, 211, 252, 0.38) 0 0.6px, transparent 1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.42) 0 0.7px, transparent 1.2px),
-    radial-gradient(circle, rgba(224, 242, 254, 0.35) 0 0.5px, transparent 0.9px),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.42) 0 0.7px,
+      transparent 1.2px
+    ),
+    radial-gradient(
+      circle,
+      rgba(224, 242, 254, 0.35) 0 0.5px,
+      transparent 0.9px
+    ),
     radial-gradient(circle, rgba(255, 255, 255, 0.5) 0 0.6px, transparent 1px),
-    radial-gradient(circle, rgba(125, 211, 252, 0.32) 0 0.7px, transparent 1.1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.46) 0 0.5px, transparent 0.8px);
+    radial-gradient(
+      circle,
+      rgba(125, 211, 252, 0.32) 0 0.7px,
+      transparent 1.1px
+    ),
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.46) 0 0.5px,
+      transparent 0.8px
+    );
   background-position:
     27px 93px,
     143px 47px,

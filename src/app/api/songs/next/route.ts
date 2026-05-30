@@ -22,7 +22,11 @@ export async function GET() {
   const [song] = await db
     .select({ path: songsTable.path })
     .from(songsTable)
-    .orderBy(asc(isNull(songsTable.playedAt)), asc(songsTable.playedAt), sql`random()`)
+    .orderBy(
+      asc(isNull(songsTable.playedAt)),
+      asc(songsTable.playedAt),
+      sql`random()`,
+    )
     .limit(1);
 
   if (!song) {
