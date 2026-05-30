@@ -185,5 +185,6 @@ export async function fetchStreamResponse(request: Request) {
 
 export async function checkStreamAvailability(request: Request) {
   const payload = await fetchIcecastPayload(request);
-  return pickActiveSource(getSources(payload)).mount === STREAM_MOUNT;
+  const source = pickActiveSource(getSources(payload));
+  return source?.mount === STREAM_MOUNT || source?.listenurl?.endsWith(STREAM_MOUNT) === true;
 }
