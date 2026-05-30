@@ -4,9 +4,7 @@ import { Music4 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const links = [
-  { href: "/pedidos", label: "Pedidos", icon: Music4 },
-];
+const links = [{ href: "/pedidos", label: "Pedidos", icon: Music4 }];
 
 export function NavMenu() {
   const pathname = usePathname();

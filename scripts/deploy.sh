@@ -3,7 +3,7 @@
 NAME="rhythm-place"
 TMPDIR="/tmp/rhythm.place"
 WORKDIR="/var/www/rhythm.place"
-SERVICE="${NAME}.service"
+SERVICE="rhythm.service"
 PATH=$PATH:/home/nginx/.bun/bin
 
 echo "📦 Preparando ambiente de deploy..."
@@ -12,8 +12,10 @@ echo "📦 Preparando ambiente de deploy..."
 [ -e $WORKDIR ] && cp -af $WORKDIR $TMPDIR
 cd $TMPDIR || exit 1
 
-git clean -fxd -e .env
-cp -f .env .env.production
+cp -f .env /tmp/.env-rhythm-place
+git clean -fxd
+cp -f /tmp/.env-rhythm-place .env.production
+cp -f /tmp/.env-rhythm-place .env
 
 echo "📥 Instalando dependências..."
 bun install
