@@ -202,7 +202,7 @@ export function RadioPlayerProvider({ children }: { children: ReactNode }) {
             (currentValue) =>
               currentValue ?? {
                 artist: "Rhythm Place",
-                mount: "/stream",
+                mount: "/main",
                 rawTitle: "",
                 title: "Transmissao ao vivo",
                 updatedAt: new Date().toISOString(),

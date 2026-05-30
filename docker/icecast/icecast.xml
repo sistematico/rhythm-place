@@ -34,7 +34,7 @@
     </http-headers>
 
     <mount type="normal">
-        <mount-name>/stream</mount-name>
+        <mount-name>/main</mount-name>
         <charset>UTF-8</charset>
     </mount>
 

@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         artist: "Rhythm Place",
-        mount: "/stream",
+        mount: "/main",
         rawTitle: "",
         title: "Transmissao ao vivo",
         updatedAt: new Date().toISOString(),

@@ -103,7 +103,7 @@ output.icecast(
   host = "icecast",
   port = 8000,
   password = getenv("ICECAST_SOURCE_PASSWORD"),
-  mount = "/stream",
+  mount = "/main",
   name = "rhythm-place",
   description = "rhythm.place radio stream",
   url = "http://localhost",
