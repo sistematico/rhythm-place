@@ -187,3 +187,71 @@ body {
     opacity: 0.95;
   }
 }
+
+/* ── Shooting stars ───────────────────────────────────────── */
+
+@keyframes shoot {
+  from {
+    opacity: 0;
+    transform: rotate(var(--shoot-angle)) translateX(0);
+  }
+
+  6% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 0.85;
+  }
+
+  to {
+    opacity: 0;
+    transform: rotate(var(--shoot-angle)) translateX(var(--shoot-dist));
+  }
+}
+
+/* ── Satellite ────────────────────────────────────────────── */
+
+@keyframes satellite-traverse {
+  from {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  4% {
+    opacity: 0.82;
+  }
+
+  92% {
+    opacity: 0.82;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(var(--sat-dx), var(--sat-dy));
+  }
+}
+
+@keyframes satellite-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1.5px rgba(125, 211, 252, 0.28));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 6px rgba(125, 211, 252, 0.82))
+      drop-shadow(0 0 14px rgba(56, 189, 248, 0.28));
+  }
+}
+
+@keyframes signal-ring {
+  from {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(0.12);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

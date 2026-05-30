@@ -12,33 +12,23 @@ echo "📦 Preparando ambiente de deploy..."
 [ -e $WORKDIR ] && cp -af $WORKDIR $TMPDIR
 cd $TMPDIR || exit 1
 
-# 🔄 ⚠️ ❌ ✅ 🗃️ 📤 🚀
-
-#git clean -fxd -e .env -e drizzle/rhythm.db -e public/uploads/ -e models/
-git clean -fxd 
-cp .env.example .env.production
-cp .env.example .env
+git clean -fxd -e .env
+cp -f .env .env.production
 
 echo "📥 Instalando dependências..."
 bun install
 
-# if ! bun run migrate; then
-#   echo "❌ Falha na migração de dados. Abortando deploy."
-#   exit 1
-# fi
-# echo "🗃️ Migração de dados concluída!"
+if ! bun run push; then
+  echo "❌ Falha na migração de dados. Abortando deploy."
+  exit 1
+fi
+echo "🗃️ Migração de dados concluída!"
 
-# if ! bun run seed; then
-#   echo "❌ Falha ao executar seed. Abortando deploy."
-#   exit 1
-# fi
-# echo "✅ Seed concluído com sucesso!"
-
-# if bun run location; then
-#   echo "✅ Atualização de localização concluída com sucesso!"
-# else
-#   echo "❌ Falha ao atualizar localização. Continuando deploy..."
-# fi
+if ! bunx tsx ./src/db/seed.ts; then
+  echo "❌ Falha ao executar seed. Abortando deploy."
+  exit 1
+fi
+echo "✅ Seed concluído com sucesso!"
 
 if bun run build; then
   echo "✅ Build concluído com sucesso!"

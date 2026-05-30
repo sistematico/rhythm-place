@@ -177,6 +177,85 @@ O script faz duas coisas antes de subir os containers:
 - A playlist local e gerada em `./playlists/` e ignorada pelo Git.
 - Se voce adicionar ou remover faixas da sua biblioteca, rode `./scripts/docker-stack.sh playlist` ou `./scripts/docker-stack.sh restart`.
 
+## Firewall (ufw)
+
+A role Ansible já configura o ufw automaticamente ao provisionar. Para abrir portas manualmente:
+
+```bash
+# Habilitar o ufw (caso ainda nao esteja ativo)
+sudo ufw enable
+
+# Permitir HTTP e HTTPS (obrigatorio para o site e Let's Encrypt)
+sudo ufw allow 80/tcp # http
+sudo ufw allow 443/tcp # https
+sudo ufw allow 5432/tcp # Postgres
+
+# Verificar regras ativas
+sudo ufw status verbose
+```
+
+> As portas internas (Next.js :3030, Icecast :8000/:8443) nao precisam ser abertas no firewall — o Nginx faz o proxy reverso.
+
+## Banco de dados (PostgreSQL)
+
+O banco precisa ser criado manualmente no servidor antes do primeiro deploy.
+
+### 1. Criar role e banco
+
+```bash
+sudo -i -u postgres psql
+```
+
+```sql
+CREATE ROLE rhythm WITH LOGIN PASSWORD 'password';
+CREATE DATABASE rhythm OWNER rhythm;
+GRANT ALL PRIVILEGES ON DATABASE rhythm TO rhythm;
+```
+
+Substitua `'password'` pela senha real (definida no vault ou `.env.production`).
+
+### 2. Configurar autenticacao (`pg_hba.conf`)
+
+Arquivo: `/etc/postgresql/17/main/pg_hba.conf`
+
+Verifique se ja existe uma linha que permite conexoes TCP locais com autenticacao por senha para o usuario `rhythm`. A linha padrao do Debian cobre isso:
+
+```
+host    all             all             127.0.0.1/32            scram-sha-256
+```
+
+Se ela nao existir, adicione antes das demais regras `host`:
+
+```
+host    rhythm          rhythm          127.0.0.1/32            scram-sha-256
+```
+
+Apos editar, recarregue o PostgreSQL:
+
+```bash
+sudo systemctl reload postgresql
+```
+
+### 3. Verificar `listen_addresses` (`postgresql.conf`)
+
+Arquivo: `/etc/postgresql/17/main/postgresql.conf`
+
+O padrao (`listen_addresses = 'localhost'`) e suficiente — a app esta no mesmo servidor. Confirme:
+
+```bash
+sudo grep listen_addresses /etc/postgresql/17/main/postgresql.conf
+```
+
+Resultado esperado: `listen_addresses = 'localhost'` (ou `'*'` se ja foi alterado).
+
+### 4. Definir `DATABASE_URL` no ambiente
+
+Adicione a variavel em `/var/www/rhythm.place/.env.production`:
+
+```dotenv
+DATABASE_URL=postgresql://rhythm:password@127.0.0.1:5432/rhythm
+```
+
 ## Operacao no servidor
 
 Servicos principais:
