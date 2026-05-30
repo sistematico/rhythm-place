@@ -78,7 +78,6 @@ Arquivo: `ansible/group_vars/all/main.yml`
 ### Liquidsoap
 
 - `liquidsoap_mount`: mount point do stream no Icecast (padrao: `/main`).
-- `liquidsoap_playlist_dir`: diretorio de playlists no servidor (`/var/lib/liquidsoap/playlists`).
 
 ## Ansible Vault (credenciais de API)
 

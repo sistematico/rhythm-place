@@ -84,22 +84,6 @@
   when: radio_icecast_letsencrypt_certificate.stat.exists
   changed_when: false
 
-- name: Stop and disable legacy Icecast2 service
-  ansible.builtin.systemd:
-    name: icecast2
-    enabled: false
-    state: stopped
-
-- name: Remove legacy Icecast2 config
-  ansible.builtin.file:
-    path: /etc/icecast2/icecast.xml
-    state: absent
-
-- name: Remove legacy Icecast2 systemd unit override
-  ansible.builtin.file:
-    path: /etc/systemd/system/icecast2.service
-    state: absent
-
 - name: Ensure rhythm Icecast2 service is enabled and running
   ansible.builtin.systemd:
     name: rhythm-icecast2
@@ -117,20 +101,11 @@
 
 - name: Ensure music base directory exists
   ansible.builtin.file:
-    path: /var/music
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-
-- name: Ensure Liquidsoap playlist directory exists
-  ansible.builtin.file:
-    path: "{{ liquidsoap_playlist_dir }}"
+    path: /var/music/rtm
     state: directory
     owner: liquidsoap
     group: liquidsoap
     mode: "0755"
-    recurse: true
 
 - name: Ensure Liquidsoap log directory exists
   ansible.builtin.file:
@@ -140,7 +115,7 @@
     group: liquidsoap
     mode: "0755"
 
-- name: Deploy Liquidsoap stream script
+- name: Deploy Liquidsoap script
   ansible.builtin.template:
     src: rhythm.liq.j2
     dest: /etc/liquidsoap/rhythm.liq

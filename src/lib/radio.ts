@@ -1,4 +1,4 @@
-export const STREAM_MOUNT = "/stream";
+export const STREAM_MOUNT = "/main";
 export const STREAM_PROXY_PATH = "/radio/stream";
 
 const STATUS_PATH = "/status-json.xsl";

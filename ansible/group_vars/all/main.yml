@@ -33,4 +33,3 @@ icecast_admin_email: "{{ letsencrypt_email }}"
 
 # ─── Liquidsoap ────────────────────────────────────────────────────────────────
 liquidsoap_mount: /main
-liquidsoap_playlist_dir: /var/music/rtm
