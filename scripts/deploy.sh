@@ -3,7 +3,7 @@
 NAME="rhythm-place"
 TMPDIR="/tmp/rhythm.place"
 WORKDIR="/var/www/rhythm.place"
-SERVICE="rhythm.service"
+SERVICE="${NAME}.service"
 PATH=$PATH:/home/nginx/.bun/bin
 
 echo "📦 Preparando ambiente de deploy..."

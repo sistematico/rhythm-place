@@ -33,12 +33,12 @@
     port: "443"
     proto: tcp
 
-- name: Allow outbound git protocol (port 9418)
-  community.general.ufw:
-    rule: allow
-    direction: out
-    port: "9418"
-    proto: tcp
+# - name: Allow outbound git protocol (port 9418)
+#   community.general.ufw:
+#     rule: allow
+#     direction: out
+#     port: "9418"
+#     proto: tcp
 
 - name: Ensure app runtime group exists
   ansible.builtin.group:
@@ -113,74 +113,6 @@
     group: "{{ app_group }}"
     mode: "0755"
 
-- name: Check if app root has a .git/config
-  ansible.builtin.stat:
-    path: "{{ app_root }}/.git/config"
-  register: web_git_config
-
-- name: Read git config if present
-  ansible.builtin.slurp:
-    src: "{{ app_root }}/.git/config"
-  register: web_git_config_content
-  when: web_git_config.stat.exists
-
-- name: Remove app root if git remote is missing or wrong
-  ansible.builtin.file:
-    path: "{{ app_root }}"
-    state: absent
-  when: >-
-    not web_git_config.stat.exists or
-    app_repo not in (web_git_config_content.content | b64decode)
-
-- name: Ensure root .ssh directory exists
-  ansible.builtin.file:
-    path: /root/.ssh
-    state: directory
-    owner: root
-    group: root
-    mode: "0700"
-
-- name: Deploy GitHub deploy key
-  ansible.builtin.copy:
-    content: "{{ github_deploy_key }}"
-    dest: /root/.ssh/rhythm-place-deploy
-    owner: root
-    group: root
-    mode: "0600"
-  no_log: true
-
-- name: Add GitHub to known_hosts
-  ansible.builtin.known_hosts:
-    name: github.com
-    key: "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
-    state: present
-
-- name: Mark app root as safe git directory
-  community.general.git_config:
-    name: safe.directory
-    scope: global
-    value: "{{ app_root }}"
-    state: present
-
-- name: Checkout application repository
-  ansible.builtin.git:
-    repo: "{{ app_repo }}"
-    dest: "{{ app_root }}"
-    version: "{{ app_branch }}"
-    force: true
-    key_file: /root/.ssh/rhythm-place-deploy
-    accept_hostkey: false
-  register: web_git_checkout
-  notify: Install JS dependencies with Bun
-
-- name: Ensure app root ownership matches runtime user
-  ansible.builtin.file:
-    path: "{{ app_root }}"
-    state: directory
-    owner: "{{ app_user }}"
-    group: "{{ app_group }}"
-    recurse: true
-
 - name: Deploy systemd unit for Next.js
   ansible.builtin.template:
     src: rhythm-place.service.j2
@@ -188,17 +120,6 @@
     mode: "0644"
   notify:
     - Daemon reload
-    - Restart nextjs
-
-- name: Deploy application environment file
-  ansible.builtin.template:
-    src: rhythm-place.env.j2
-    dest: "{{ app_root }}/.env.production"
-    owner: "{{ app_user }}"
-    group: "{{ app_group }}"
-    mode: "0640"
-  notify:
-    - Build Next.js app
     - Restart nextjs
 
 - name: Ensure certbot webroot exists
@@ -237,22 +158,11 @@
     state: link
   notify: Reload nginx
 
-- name: Remove legacy Nginx site files
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - /etc/nginx/sites-available/rhythm.place.conf
-    - /etc/nginx/sites-enabled/rhythm.place.conf
-    - /etc/nginx/sites-available/stream.rhythm.place.conf
-    - /etc/nginx/sites-enabled/stream.rhythm.place.conf
-  notify: Reload nginx
-
-- name: Disable default nginx site
-  ansible.builtin.file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
-  notify: Reload nginx
+# - name: Disable default nginx site
+#   ansible.builtin.file:
+#     path: /etc/nginx/sites-enabled/default
+#     state: absent
+#   notify: Reload nginx
 
 - name: Install certbot DNS provider credentials
   ansible.builtin.template:
@@ -270,26 +180,26 @@
     group: root
     mode: "0750"
 
-- name: Issue/Renew wildcard certificate
-  ansible.builtin.command: >-
-    certbot certonly
-    --dns-cloudflare
-    --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
-    --non-interactive
-    --agree-tos
-    --email {{ letsencrypt_email }}
-    --cert-name {{ letsencrypt_cert_name }}
-    -d {{ letsencrypt_domains[0] }}
-    -d {{ letsencrypt_domains[1] }}
-  args:
-    creates: "/etc/letsencrypt/live/{{ letsencrypt_cert_name }}/fullchain.pem"
-  notify: Reload nginx
+# - name: Issue/Renew wildcard certificate
+#   ansible.builtin.command: >-
+#     certbot certonly
+#     --dns-cloudflare
+#     --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
+#     --non-interactive
+#     --agree-tos
+#     --email {{ letsencrypt_email }}
+#     --cert-name {{ letsencrypt_cert_name }}
+#     -d {{ letsencrypt_domains[0] }}
+#     -d {{ letsencrypt_domains[1] }}
+#   args:
+#     creates: "/etc/letsencrypt/live/{{ letsencrypt_cert_name }}/fullchain.pem"
+#   notify: Reload nginx
 
-- name: Ensure certbot auto-renew timer is enabled
-  ansible.builtin.systemd:
-    name: certbot.timer
-    enabled: true
-    state: started
+# - name: Ensure certbot auto-renew timer is enabled
+#   ansible.builtin.systemd:
+#     name: certbot.timer
+#     enabled: true
+#     state: started
 
 - name: Ensure nginx is enabled and running
   ansible.builtin.systemd:
