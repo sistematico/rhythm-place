@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { mkdir, readdir } from "node:fs/promises";
-import { basename, extname, join } from "node:path";
+import { basename, extname } from "node:path";
 import NodeID3 from "node-id3";
 import { db } from "@/db";
 import { songsTable } from "@/db/schema";
@@ -24,7 +24,7 @@ async function scanAudioFiles(dir: string): Promise<Set<string>> {
   async function scan(d: string) {
     try {
       for (const entry of await readdir(d, { withFileTypes: true })) {
-        const full = join(d, entry.name);
+        const full = `${d}/${entry.name}`;
         if (entry.isDirectory()) await scan(full);
         else if (AUDIO_EXTS.has(extname(entry.name).toLowerCase()))
           files.add(full);
