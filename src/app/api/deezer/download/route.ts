@@ -69,13 +69,21 @@ export async function GET(request: Request) {
         await downloadQueued(async () => {
           if (request.signal.aborted) return;
 
+          const arl = process.env.DEEZER_ARL;
+          if (!arl) {
+            throw new Error("DEEZER_ARL não configurado no servidor.");
+          }
+
           const before = await scanAudioFiles(DOWNLOAD_DIR);
 
           await new Promise<void>((resolve, reject) => {
             const child = spawn(
               GODEEZ_BIN,
               ["download", "track", String(trackId)],
-              { cwd: DOWNLOAD_DIR, env: process.env },
+              {
+                cwd: DOWNLOAD_DIR,
+                env: { ...process.env, DEEZER_ARL: arl },
+              },
             );
 
             const abort = () => child.kill("SIGTERM");
