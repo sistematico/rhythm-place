@@ -8,7 +8,7 @@ import { downloadQueued } from "@/lib/deezer-queue";
 
 export const dynamic = "force-dynamic";
 
-const GODEEZ_BIN = "/usr/local/bin/godeez";
+const GODEEZ_BIN = process.env.GODEEZ_BIN ?? "/usr/local/bin/godeez";
 const DOWNLOAD_DIR =
   process.env.GODEEZ_DOWNLOAD_DIR ?? "/var/music/rtm/uploads";
 const AUDIO_EXTS = new Set([".mp3", ".flac", ".m4a", ".ogg", ".wav", ".aac"]);
@@ -168,7 +168,9 @@ export async function GET(request: Request) {
           const msg = err instanceof Error ? err.message : String(err);
           const isNotFound = msg.includes("ENOENT");
           send("error", {
-            message: isNotFound ? "godeez não encontrado no servidor." : msg,
+            message: isNotFound
+              ? `godeez não encontrado em ${GODEEZ_BIN}. Defina GODEEZ_BIN no ambiente.`
+              : msg,
           });
         }
       } finally {

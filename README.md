@@ -195,6 +195,142 @@ sudo ufw status verbose
 
 > As portas internas (Next.js :3030, Icecast :8000/:8443) nao precisam ser abertas no firewall — o Nginx faz o proxy reverso.
 
+## Autenticação
+
+O sistema de autenticação usa JWT stateless com dois tokens — access e refresh — armazenados em cookies `httpOnly`. Não há biblioteca de auth externa; toda a lógica fica em Server Actions e no `proxy.ts`.
+
+### Como funciona
+
+```
+Login
+  └─ Server Action login()
+       ├─ Valida email/senha com Zod
+       ├─ Verifica senha com bcryptjs
+       ├─ Emite access token (15 min, HS256) e refresh token (7 dias, HS256)
+       ├─ Salva hash SHA-256 do refresh token no banco (tabela refresh_tokens)
+       └─ Define cookies httpOnly: access_token e refresh_token
+
+Requisição autenticada
+  └─ proxy.ts (roda antes de qualquer rota)
+       ├─ Lê access_token → verifica assinatura JWT
+       │    └─ Válido → prossegue
+       └─ Expirado/ausente → lê refresh_token
+            ├─ Verifica assinatura JWT do refresh token
+            ├─ Confirma hash no banco (revogação possível)
+            ├─ Válido → emite novo access_token no cookie e prossegue
+            └─ Inválido → apaga cookies e redireciona para /login
+
+Logout
+  └─ Server Action logout()
+       ├─ Remove hash do refresh token do banco
+       └─ Apaga cookies access_token e refresh_token
+```
+
+### Variáveis de ambiente
+
+Gere os segredos com:
+
+```bash
+openssl rand -base64 32
+```
+
+Adicione em `.env` (dev) e `.env.production` (produção):
+
+```dotenv
+ACCESS_TOKEN_SECRET=<segredo-32-bytes-base64>
+REFRESH_TOKEN_SECRET=<segredo-32-bytes-base64>
+```
+
+Use valores **distintos** para cada variável.
+
+### Migração do banco
+
+As tabelas `users` e `refresh_tokens` são criadas pela migração gerada em `drizzle/`. Rode após configurar `DATABASE_URL`:
+
+```bash
+bun run push    # dev — aplica direto sem arquivo de migração
+bun run migrate # produção — roda os arquivos em drizzle/
+```
+
+### Criar o primeiro usuário
+
+Não há tela de cadastro exposta. Crie o usuário via script:
+
+```bash
+bun -e "
+import { hash } from 'bcryptjs';
+import { db } from './src/db/index.ts';
+import { usersTable } from './src/db/schema.ts';
+await db.insert(usersTable).values({
+  email: 'admin@exemplo.com',
+  passwordHash: await hash('senha-aqui', 12),
+});
+process.exit(0);
+"
+```
+
+### Arquivos relevantes
+
+| Arquivo | Responsabilidade |
+|---|---|
+| `proxy.ts` | Verificação de tokens e renovação automática do access token antes de qualquer rota |
+| `src/lib/session.ts` | Assinar/verificar JWTs, criar e encerrar sessão (cookies + banco) |
+| `src/lib/dal.ts` | `verifySession()` e `getUser()` para uso em Server Components e Actions |
+| `src/lib/auth-definitions.ts` | Schemas Zod do formulário de login |
+| `src/app/actions/auth.ts` | Server Actions `login()` e `logout()` |
+| `src/app/login/` | Página e formulário de login |
+| `src/db/schema.ts` | Tabelas `users` e `refresh_tokens` |
+
+### Protegendo rotas e dados
+
+Use `verifySession()` do DAL em qualquer Server Component, Server Action ou Route Handler:
+
+```ts
+import { verifySession } from "@/lib/dal";
+
+// Em um Server Component:
+export default async function Page() {
+  const session = await verifySession(); // redireciona para /login se não autenticado
+}
+
+// Em uma Server Action:
+"use server";
+export async function minhaAction() {
+  const session = await verifySession();
+  // session.userId disponível
+}
+```
+
+Para buscar os dados do usuário logado:
+
+```ts
+import { getUser } from "@/lib/dal";
+
+const user = await getUser(); // { id, email, createdAt }
+```
+
+Ambas as funções usam `React.cache()` e são deduplicadas automaticamente por render pass.
+
+### Adicionar rotas públicas
+
+Rotas acessíveis sem autenticação são declaradas em `proxy.ts`:
+
+```ts
+const publicRoutes = ["/login"];
+```
+
+### Logout
+
+Chame a Server Action `logout()` de qualquer formulário ou botão:
+
+```tsx
+import { logout } from "@/app/actions/auth";
+
+<form action={logout}>
+  <button type="submit">Sair</button>
+</form>
+```
+
 ## Banco de dados (PostgreSQL)
 
 O banco precisa ser criado manualmente no servidor antes do primeiro deploy.
