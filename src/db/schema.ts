@@ -6,6 +6,23 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+export const usersTable = pgTable("users", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar({ length: 255 }).notNull().unique(),
+  passwordHash: text().notNull(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
+export const refreshTokensTable = pgTable("refresh_tokens", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: integer()
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  tokenHash: text().notNull().unique(),
+  expiresAt: timestamp({ withTimezone: true }).notNull(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
 export const songsTable = pgTable("songs", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   path: text().notNull().unique(),

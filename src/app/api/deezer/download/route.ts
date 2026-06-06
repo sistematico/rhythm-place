@@ -75,11 +75,10 @@ export async function GET(request: Request) {
 
           await new Promise<void>((resolve, reject) => {
             const child = spawn(
-              GODEEZ_BIN,
+              `DEEZER_ARL=${arl} ${GODEEZ_BIN}`,
               ["download", "track", String(trackId)],
               {
                 cwd: DOWNLOAD_DIR,
-                env: { ...process.env, DEEZER_ARL: arl },
               },
             );
 
