@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 const GODEEZ_BIN = "/usr/local/bin/godeez";
 const DOWNLOAD_DIR =
   process.env.GODEEZ_DOWNLOAD_DIR ?? "/var/music/rtm/uploads";
+const DEEZER_ARL = process.env.DEEZER_ARL;
 const AUDIO_EXTS = new Set([".mp3", ".flac", ".m4a", ".ogg", ".wav", ".aac"]);
 const PERCENT_RE = /(\d+(?:\.\d+)?)\s*%/;
 
@@ -69,20 +70,16 @@ export async function GET(request: Request) {
         await downloadQueued(async () => {
           if (request.signal.aborted) return;
 
-          const arl = process.env.DEEZER_ARL;
-          if (!arl) {
-            throw new Error("DEEZER_ARL não configurado no servidor.");
-          }
+          if (!DEEZER_ARL) throw new Error("DEEZER_ARL não configurado no servidor.");
 
           const before = await scanAudioFiles(DOWNLOAD_DIR);
 
           await new Promise<void>((resolve, reject) => {
             const child = spawn(
-              GODEEZ_BIN,
+              `DEEZER_ARL=${DEEZER_ARL} ${GODEEZ_BIN}`,
               ["download", "track", String(trackId)],
               {
                 cwd: DOWNLOAD_DIR,
-                env: { ...process.env, DEEZER_ARL: arl },
               },
             );
 
