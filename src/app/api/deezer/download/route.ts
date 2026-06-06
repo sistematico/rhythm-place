@@ -75,10 +75,15 @@ export async function GET(request: Request) {
 
           await new Promise<void>((resolve, reject) => {
             const child = spawn(
-              `DEEZER_ARL=${arl} ${GODEEZ_BIN}`,
+              'godeez',
               ["download", "track", String(trackId)],
               {
                 cwd: DOWNLOAD_DIR,
+                shell: true,
+                env: {
+                  ...process.env, // This merges your current PATH into the child process
+                  DEEZER_ARL: arl
+                }
               },
             );
 
