@@ -131,8 +131,17 @@ export async function GET(request: Request) {
                 const after = await scanAudioFiles(DOWNLOAD_DIR);
                 const newFiles = [...after].filter((f) => !before.has(f));
 
+                console.log("[godeez] output:", outputLog);
+                console.log("[godeez] before:", [...before]);
+                console.log("[godeez] after:", [...after]);
+                console.log("[godeez] new files:", newFiles);
+
                 if (newFiles.length === 0) {
-                  reject(new Error("No audio file found after download"));
+                  reject(
+                    new Error(
+                      `No audio file found after download. godeez output: ${outputLog.slice(0, 500)}`,
+                    ),
+                  );
                   return;
                 }
 
