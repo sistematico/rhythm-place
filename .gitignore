@@ -55,3 +55,7 @@ ansible/.vault_pass
 # Drizzle
 drizzle/**
 !drizzle/.gitkeep
+
+# Covers
+public/uploads/**
+!public/uploads/.gitkeep

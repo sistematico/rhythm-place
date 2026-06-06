@@ -81,8 +81,12 @@ export async function GET(request: Request) {
             const abort = () => child.kill("SIGTERM");
             request.signal.addEventListener("abort", abort, { once: true });
 
+            let outputLog = "";
+
             function onData(chunk: Buffer) {
-              const match = chunk.toString().match(PERCENT_RE);
+              const text = chunk.toString();
+              outputLog += text;
+              const match = text.match(PERCENT_RE);
               if (match) {
                 send("progress", {
                   percent: Math.min(99, Math.round(parseFloat(match[1]))),
@@ -95,6 +99,7 @@ export async function GET(request: Request) {
 
             child.on("error", (err) => {
               request.signal.removeEventListener("abort", abort);
+              console.error("[godeez] spawn error:", err);
               reject(err);
             });
 
@@ -107,7 +112,14 @@ export async function GET(request: Request) {
               }
 
               if (code !== 0) {
-                reject(new Error(`godeez exited with code ${code}`));
+                console.error(
+                  `[godeez] exited with code ${code}\n${outputLog}`,
+                );
+                reject(
+                  new Error(
+                    `godeez saiu com código ${code}: ${outputLog.slice(0, 300)}`,
+                  ),
+                );
                 return;
               }
 
@@ -148,12 +160,11 @@ export async function GET(request: Request) {
         });
       } catch (err) {
         if (!request.signal.aborted) {
-          const isNotFound =
-            err instanceof Error && err.message.includes("ENOENT");
+          console.error("[godeez] download error:", err);
+          const msg = err instanceof Error ? err.message : String(err);
+          const isNotFound = msg.includes("ENOENT");
           send("error", {
-            message: isNotFound
-              ? "godeez não encontrado no servidor."
-              : "Falha no download. Tente novamente.",
+            message: isNotFound ? "godeez não encontrado no servidor." : msg,
           });
         }
       } finally {
