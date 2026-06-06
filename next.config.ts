@@ -19,11 +19,8 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "e-cdns-images.dzcdn.net",
-        pathname: "/images/**",
-      },
+      new URL("https://cdn-images.dzcdn.net/images/**"),
+      new URL("https://e-cdns-images.dzcdn.net/images/**"),
     ],
   },
 };

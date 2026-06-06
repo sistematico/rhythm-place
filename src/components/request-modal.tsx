@@ -1,12 +1,154 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Music2, Search, X } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Loader2,
+  Music2,
+  Search,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import type { DeezerSearchResponse } from "@/app/api/deezer/search/route";
 import { PAGE_SIZE } from "@/app/api/deezer/search/route";
 
 type DeezerResult = DeezerSearchResponse["results"][number];
+
+// ---------------------------------------------------------------------------
+// DownloadButton
+// ---------------------------------------------------------------------------
+
+type DownloadStatus = "idle" | "queued" | "downloading" | "done" | "error";
+
+function DownloadButton({ trackId }: { trackId: number }) {
+  const [status, setStatus] = useState<DownloadStatus>("idle");
+  const [percent, setPercent] = useState(0);
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
+
+  async function handleDownload() {
+    if (status === "done" || status === "queued" || status === "downloading") {
+      return;
+    }
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    setStatus("queued");
+    setPercent(0);
+
+    try {
+      const response = await fetch(`/api/deezer/download?trackId=${trackId}`, {
+        signal: controller.signal,
+        cache: "no-store",
+      });
+
+      if (!response.ok || !response.body) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buf += decoder.decode(value, { stream: true });
+
+        for (;;) {
+          const boundary = buf.indexOf("\n\n");
+          if (boundary === -1) break;
+          const block = buf.slice(0, boundary);
+          buf = buf.slice(boundary + 2);
+
+          let eventName = "message";
+          let data = "";
+          for (const line of block.split("\n")) {
+            if (line.startsWith("event: ")) eventName = line.slice(7).trim();
+            else if (line.startsWith("data: ")) data = line.slice(6).trim();
+          }
+
+          if (eventName === "progress") {
+            const { percent: p } = JSON.parse(data) as { percent: number };
+            setStatus("downloading");
+            setPercent(p);
+          } else if (eventName === "done") {
+            setStatus("done");
+            return;
+          } else if (eventName === "error") {
+            const { message } = JSON.parse(data) as { message: string };
+            throw new Error(message);
+          }
+        }
+      }
+    } catch (err) {
+      if ((err as Error).name !== "AbortError") {
+        setStatus("error");
+      }
+    }
+  }
+
+  if (status === "done") {
+    return (
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400">
+        <Check size={13} />
+      </div>
+    );
+  }
+
+  if (status === "downloading") {
+    return (
+      <div className="flex h-7 shrink-0 items-center gap-1 rounded-lg bg-white/5 px-1.5 text-white/50">
+        <Loader2 size={12} className="animate-spin" />
+        <span className="min-w-[2ch] text-right font-mono text-[11px]">
+          {percent}%
+        </span>
+      </div>
+    );
+  }
+
+  if (status === "queued") {
+    return (
+      <div
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30"
+        title="Na fila..."
+      >
+        <Loader2 size={13} className="animate-spin" />
+      </div>
+    );
+  }
+
+  // idle or error
+  return (
+    <button
+      type="button"
+      onClick={handleDownload}
+      title={status === "error" ? "Tentar novamente" : "Baixar"}
+      className={[
+        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition",
+        status === "error"
+          ? "bg-red-500/12 text-red-400 hover:bg-red-500/20"
+          : "text-white/25 hover:bg-white/8 hover:text-white/70",
+      ].join(" ")}
+    >
+      {status === "error" ? <AlertCircle size={13} /> : <Download size={13} />}
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// RequestModal
+// ---------------------------------------------------------------------------
 
 interface RequestModalProps {
   open: boolean;
@@ -58,7 +200,7 @@ export function RequestModal({ open, onClose }: RequestModalProps) {
     }
   }, [open]);
 
-  // Debounce query → debouncedQuery (600 ms) and reset page
+  // Debounce query → debouncedQuery (600 ms) and reset page atomically
   useEffect(() => {
     if (query.length < 2) {
       setDebouncedQuery("");
@@ -72,7 +214,7 @@ export function RequestModal({ open, onClose }: RequestModalProps) {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Fetch from Deezer when debouncedQuery or page changes
+  // Fetch when debouncedQuery or page changes; page changes are immediate (no debounce)
   useEffect(() => {
     if (!debouncedQuery) {
       setResults([]);
@@ -84,9 +226,10 @@ export function RequestModal({ open, onClose }: RequestModalProps) {
     setLoading(true);
     setFetchError(false);
 
-    const url = `/api/deezer/search?q=${encodeURIComponent(debouncedQuery)}&page=${page}`;
-
-    fetch(url, { signal: controller.signal, cache: "no-store" })
+    fetch(
+      `/api/deezer/search?q=${encodeURIComponent(debouncedQuery)}&page=${page}`,
+      { signal: controller.signal, cache: "no-store" },
+    )
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json() as Promise<DeezerSearchResponse>;
@@ -133,7 +276,7 @@ export function RequestModal({ open, onClose }: RequestModalProps) {
       ref={dialogRef}
       onClick={handleBackdropClick}
       onKeyDown={(e) => e.key === "Escape" && onClose()}
-      className="m-auto flex max-h-[90vh] w-full max-w-lg flex-col rounded-[1.75rem] border border-white/10 p-0 text-white shadow-[0_30px_100px_rgba(2,6,23,0.7)] backdrop:bg-black/55 backdrop:backdrop-blur-sm"
+      className="m-auto w-full max-w-lg rounded-[1.75rem] border border-white/10 p-0 text-white shadow-[0_30px_100px_rgba(2,6,23,0.7)] backdrop:bg-black/55 backdrop:backdrop-blur-sm open:flex open:max-h-[90vh] open:flex-col"
       style={{
         background:
           "radial-gradient(circle at 50% 0%, rgba(59,130,246,0.07) 0%, transparent 60%), linear-gradient(180deg, #020611 0%, #030914 55%, #020611 100%)",
@@ -220,7 +363,7 @@ export function RequestModal({ open, onClose }: RequestModalProps) {
                       <Music2 size={14} className="text-white/35" />
                     </div>
                   )}
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-white/85">
                       {song.title}
                     </p>
@@ -228,6 +371,7 @@ export function RequestModal({ open, onClose }: RequestModalProps) {
                       {[song.artist, song.album].filter(Boolean).join(" · ")}
                     </p>
                   </div>
+                  <DownloadButton trackId={song.id} />
                 </div>
               </li>
             ))}
