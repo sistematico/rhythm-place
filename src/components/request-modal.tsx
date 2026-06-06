@@ -22,7 +22,13 @@ type DeezerResult = DeezerSearchResponse["results"][number];
 // DownloadButton
 // ---------------------------------------------------------------------------
 
-type DownloadStatus = "idle" | "queued" | "downloading" | "done" | "error";
+type DownloadStatus =
+  | "idle"
+  | "queued"
+  | "downloading"
+  | "done"
+  | "already_downloaded"
+  | "error";
 
 function DownloadButton({ trackId }: { trackId: number }) {
   const [status, setStatus] = useState<DownloadStatus>("idle");
@@ -34,7 +40,12 @@ function DownloadButton({ trackId }: { trackId: number }) {
   }, []);
 
   async function handleDownload() {
-    if (status === "done" || status === "queued" || status === "downloading") {
+    if (
+      status === "done" ||
+      status === "already_downloaded" ||
+      status === "queued" ||
+      status === "downloading"
+    ) {
       return;
     }
 
@@ -85,6 +96,9 @@ function DownloadButton({ trackId }: { trackId: number }) {
           } else if (eventName === "done") {
             setStatus("done");
             return;
+          } else if (eventName === "already_downloaded") {
+            setStatus("already_downloaded");
+            return;
           } else if (eventName === "error") {
             const { message } = JSON.parse(data) as { message: string };
             throw new Error(message);
@@ -101,6 +115,17 @@ function DownloadButton({ trackId }: { trackId: number }) {
   if (status === "done") {
     return (
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400">
+        <Check size={13} />
+      </div>
+    );
+  }
+
+  if (status === "already_downloaded") {
+    return (
+      <div
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30"
+        title="Já baixado"
+      >
         <Check size={13} />
       </div>
     );

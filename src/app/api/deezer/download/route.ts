@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { mkdir, readdir } from "node:fs/promises";
 import { basename, extname } from "node:path";
+import { eq } from "drizzle-orm";
 import NodeID3 from "node-id3";
 import { db } from "@/db";
 import { songsTable } from "@/db/schema";
@@ -9,7 +10,9 @@ import { downloadQueued } from "@/lib/deezer-queue";
 export const dynamic = "force-dynamic";
 
 const GODEEZ_BIN = process.env.GODEEZ_BIN ?? "/usr/local/bin/godeez";
-const DOWNLOAD_DIR = process.env.DOWNLOAD_DIR ?? "/var/music/rtm/uploads";
+// ProtectHome=read-only in systemd blocks writes to /home/nginx — override HOME to /var/music/rtm
+const GODEEZ_HOME = process.env.GODEEZ_HOME ?? "/var/music/rtm";
+const DOWNLOAD_DIR = `${GODEEZ_HOME}/Music/GoDeez`;
 const AUDIO_EXTS = new Set([".mp3", ".flac", ".m4a", ".ogg", ".wav", ".aac"]);
 const PERCENT_RE = /(\d+(?:\.\d+)?)\s*%/;
 const arl = process.env.DEEZER_ARL;
@@ -62,6 +65,16 @@ export async function GET(request: Request) {
         }
       }
 
+      const existing = await db.query.songsTable.findFirst({
+        where: eq(songsTable.deezerTrackId, trackId),
+        columns: { id: true },
+      });
+      if (existing) {
+        send("already_downloaded", {});
+        controller.close();
+        return;
+      }
+
       send("queued", {});
 
       try {
@@ -77,8 +90,8 @@ export async function GET(request: Request) {
               GODEEZ_BIN,
               ["download", "track", String(trackId)],
               {
-                cwd: DOWNLOAD_DIR,
-                env: { ...process.env, DEEZER_ARL: arl },
+                cwd: GODEEZ_HOME,
+                env: { ...process.env, DEEZER_ARL: arl, HOME: GODEEZ_HOME },
               },
             );
 
@@ -160,6 +173,7 @@ export async function GET(request: Request) {
                     album: tags.album ?? null,
                     genre: tags.genre ?? null,
                     duration: durationMs ? Math.round(durationMs / 1000) : null,
+                    deezerTrackId: trackId,
                   })
                   .onConflictDoNothing();
 

@@ -31,6 +31,7 @@ export const songsTable = pgTable("songs", {
   album: varchar({ length: 255 }),
   genre: varchar({ length: 100 }),
   duration: integer(),
+  deezerTrackId: integer().unique(),
   played: integer().notNull().default(0),
   playedAt: timestamp({ withTimezone: true }),
   addedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
