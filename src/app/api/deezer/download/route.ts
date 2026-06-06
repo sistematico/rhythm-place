@@ -9,8 +9,7 @@ import { downloadQueued } from "@/lib/deezer-queue";
 export const dynamic = "force-dynamic";
 
 const GODEEZ_BIN = process.env.GODEEZ_BIN ?? "/usr/local/bin/godeez";
-const DOWNLOAD_DIR =
-  process.env.GODEEZ_DOWNLOAD_DIR ?? "/var/music/rtm/uploads";
+const DOWNLOAD_DIR = process.env.DOWNLOAD_DIR ?? "/var/music/rtm/uploads";
 const AUDIO_EXTS = new Set([".mp3", ".flac", ".m4a", ".ogg", ".wav", ".aac"]);
 const PERCENT_RE = /(\d+(?:\.\d+)?)\s*%/;
 const arl = process.env.DEEZER_ARL;
@@ -75,15 +74,11 @@ export async function GET(request: Request) {
 
           await new Promise<void>((resolve, reject) => {
             const child = spawn(
-              'godeez',
+              GODEEZ_BIN,
               ["download", "track", String(trackId)],
               {
                 cwd: DOWNLOAD_DIR,
-                shell: true,
-                env: {
-                  ...process.env, // This merges your current PATH into the child process
-                  DEEZER_ARL: arl
-                }
+                env: { ...process.env, DEEZER_ARL: arl },
               },
             );
 
@@ -170,12 +165,16 @@ export async function GET(request: Request) {
       } catch (err) {
         if (!request.signal.aborted) {
           console.error("[godeez] download error:", err);
-          const msg = err instanceof Error ? err.message : String(err);
-          const isNotFound = msg.includes("ENOENT");
+          const isSpawnNotFound =
+            err instanceof Error &&
+            (err as NodeJS.ErrnoException).code === "ENOENT" &&
+            (err as NodeJS.ErrnoException).syscall?.startsWith("spawn");
           send("error", {
-            message: isNotFound
-              ? `godeez não encontrado em ${GODEEZ_BIN}. Defina GODEEZ_BIN no ambiente.`
-              : msg,
+            message: isSpawnNotFound
+              ? `Binário não encontrado: ${GODEEZ_BIN}`
+              : err instanceof Error
+                ? err.message
+                : String(err),
           });
         }
       } finally {
