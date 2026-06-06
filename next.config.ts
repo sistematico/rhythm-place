@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_BUILD_VERSION: buildVersion,
     NEXT_PUBLIC_BUILD_DATE: buildDate,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "e-cdns-images.dzcdn.net",
+        pathname: "/images/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
